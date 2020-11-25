@@ -304,7 +304,6 @@ class Window {
                         failed.add(filePath);
                     }
                 }
-                // todo make custom dialog
                 if (failed.size() != 0) {
                     StringBuilder messageBuilder = new StringBuilder("The following file(s) failed to" +
                             " copy because a file with the same name already exists in the directory " +
