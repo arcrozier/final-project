@@ -1,0 +1,72 @@
+Title: Photo Bracket
+
+Pitch: With storage getting cheaper and cheaper and cameras becoming more prevalent and able to 
+    take good photos in increasingly challenging conditions, the limiting factor for preserving
+    memories is no longer the space to keep them but the time to sort them. To make this process 
+    easier, we propose an app that would simplify and potentially gamify the process of sorting 
+    your photos: The Photo Bracket.
+
+Description: Sorting photos is difficult. Even when you can get them onto a computer, going through
+    the 10 nearly identical selfies you have to decide on the best one is time consuming and 
+    unintuitive. How to compare two photos? What happens to the ones you decide on? Often, you end 
+    up swiping back and forth through and few and then add to them some massive "favorites" folder.
+    Other programs allow you to give your photos "ratings" but it still puts "good" and "bad" in 
+    absolute terms which fails to significantly ameliorate the problem.
+
+    We have developed an alternative to this style of selecting your favorite memories. It makes it 
+    very easy to compare photos and allows you to narrow them down to arbitrary number. Our 
+    application allows users to select the photos they want to choose their favorites from and 
+    then shows them two photos at a time. Using a similarity algorithm, the program can select the 
+    photos that are most likely duplicates, making it easy to narrow down to your favorite one. 
+    From the selected pair, you simply choose your favorite of the two and the other is discarded. 
+    This process continues, bracket style, until the desired number of photos is reached. So, for 
+    the first round, nearly every photo is compared to one other (if the number of a photos is not
+    a power of 2, some may skip a round or two). The winners of each of those rounds faces off 
+    against the most-similar winner of a different round. The user can also tell the program that 
+    both photos are good, in which case each will advance to the next round and each be compared against a 
+    new photo. Once the user thinks all the photos are good (or the desired number of photos is 
+    reached), the user is presented with the finalists, that can be exported, uploaded, or 
+    copied wherever they want. 
+
+    We believe this will be helpful to people because choosing between two photos is a lot less 
+    daunting than choosing between 100. By breaking this problem down into smaller pieces, we 
+    believe users will be more likely to find the photos they enjoy and will have a better 
+    experience looking back through their photos because of it. We also hope people will actually
+    enjoy the process of sorting their photos. This app will allow them to quickly see all their 
+    pictures while avoiding monotony and frustration. 
+
+Outcomes:
+    A good outcome for this project would be if Photo Bracket would allow the user to choose their
+    favorite between two randomly selected photos from a static, predetermined collection of
+    pictures stored in the app, for multiple round. This selecting process will continue until
+    the user is statisfied with all remaining pictures and/or has reached their designated
+    target number of pictures. A better outcome would be if Photo Bracket allowed users to upload
+    their own photos to the bracket, played upbeat music in the background, and displayed all the
+    pictures in a bracket structure. The best outcome would build on all previous functions but
+    instead of randomly selecting the pictures being chosen between every round, Photo Bracket
+    would analyze and compare the components of each image and present the user with graphically
+    similar photos every round. In addition to this, users would be able to select the background
+    music.  
+
+New skills: 
+    This project will give us the oppurtunity to learn how to process and present visual
+    and audio media. This may lead us to explore Java libraries that were not discussed in this
+    course. Further, we will also learn how to allow users upload files to be used by the program. 
+
+Topics to research: 
+    Completing Photo Bracket will require us to research Java's syntax for handling, analyzinig,
+    and displaying images. Similarly, we will need to research how Java reads and plays audio files. 
+    We will also investigate the concept of comparing images to determine similarities. This will
+    include assessing an image's overall components (for example, are there people in the image?
+    Animals? Plants?) and its pixels. 
+
+Who will do what:
+
+    Aragorn will be responsible for managing the  graphical user interface. This will incude
+    allowing the selection of pictures, displaying two pictures at a time with buttons to select
+    one or both, and exporting the final picture(s).
+
+    Rachel will be responsible for creating a method that will choose the pictures to display 
+    (getNextPics()), building bracket (a list that stores the images) and updating which
+    pictures are chosen (updatePics()).
+
