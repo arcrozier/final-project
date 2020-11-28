@@ -358,7 +358,7 @@ class Window {
                 );
         if (proceed != JOptionPane.YES_OPTION) return;
         try {
-            Files.write(favorites.toPath(), new byte[] {}, StandardOpenOption.TRUNCATE_EXISTING);
+            Files.write(favorites.toPath(), new byte[0], StandardOpenOption.TRUNCATE_EXISTING);
         } catch (IOException e) {
             e.printStackTrace();
         }
