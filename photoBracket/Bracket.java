@@ -1,13 +1,6 @@
 package photoBracket;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
-import java.util.List;
 
 public class Bracket {
 
@@ -67,6 +60,10 @@ public class Bracket {
         currentRound.add(file);
     }
 
+    /**
+     * Adds a list of files to the bracket
+     * @param files - the one or more files to be added
+     */
     public void add(ImageFile... files) {
         for (ImageFile file : files) add(file);
     }
@@ -183,9 +180,12 @@ public class Bracket {
          */
         public void add(ImageFile file) {
             files.add(file);
+            /*
             undoHistory.push(new RoundAction(files, new ImageFile[]{file},
                     new int[]{files.size() - 1},
                     RoundAction.Action.REMOVE, null));
+
+             */
             if (winners == null) winners = new Round();
         }
 
@@ -270,6 +270,9 @@ public class Bracket {
             performAction(action.relatedAction);
         }
 
+        /**
+         * Class that one could hypothetically use to represent undo/redo actions
+         */
         private static class RoundAction {
 
             public final List<ImageFile> listModified;

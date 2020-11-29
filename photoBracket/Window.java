@@ -86,7 +86,7 @@ class Window implements ComponentListener {
             frame.add(makePicPanel(), topPanelConstraints);
         }
 
-        refreshPics(bracket);
+        populate(bracket);
         constraints.gridx = 0;
         constraints.weighty = 0;
         constraints.gridy = 1;
@@ -101,12 +101,9 @@ class Window implements ComponentListener {
      * Refreshes the picture view - used for when the photos update (probably outside of direct
      * user interaction, e.i. user selecting left/right/both/neither don't need this since that
      * can update the photos directly)
-     * @param bracket  - The bracket to get photos from
      */
-    private void refreshPics(Bracket bracket) {
-        this.bracket = bracket;
-        if (images[0] == null || images[1] == null) images =
-                bracket.getNextPair();
+    private void refreshPics() {
+        if (images[0] == null || images[1] == null) return;
         try {
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
         } catch (IOException e) {
@@ -189,7 +186,7 @@ class Window implements ComponentListener {
         if (result == JFileChooser.APPROVE_OPTION) {
             bracket.add(ImageFile.toImageFiles(fileChooser.getSelectedFiles()));
         }
-        refreshPics(bracket);
+        populate(bracket);
     }
 
     /**
@@ -288,12 +285,25 @@ class Window implements ComponentListener {
     /**
      * Populates the window with the next two pictures pulled from the bracket (useful when
      * initializing the window)
-     * TODO throws UnsupportedOperationException
+     * Updates the bracket at the same time
      */
-    void populate() {
-        throw new UnsupportedOperationException("Missing bracket object");
+    void populate(Bracket bracket) {
+        this.bracket = bracket;
+        images = bracket.getNextPair();
+        refreshPics();
     }
 
+    /**
+     * Sets the bracket for this Window (alias for populate(Bracket bracket))
+     * @param bracket   - The bracket to use for choosing files
+     */
+    void setBracket(Bracket bracket) {
+        populate(bracket);
+    }
+
+    /**
+     * Allows the user to choose a directory to export all their favorites to, then exports them all
+     */
     private void exportFavorites() {
         JFileChooser export = new JFileChooser();
         export.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
@@ -374,6 +384,9 @@ class Window implements ComponentListener {
         }
     }
 
+    /**
+     * Call this once all the images have been sorted from the bracket
+     */
     private void done() {
         String[] options = {"Save favorites", "Continue sorting"};
         int after = JOptionPane.showOptionDialog(frame,
@@ -396,7 +409,7 @@ class Window implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        refreshPics(bracket);
+        refreshPics();
     }
 
     @Override
