@@ -2,31 +2,28 @@ package photoBracket;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.nio.file.*;
-import java.util.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.file.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
  * @author Aragorn Crozier
  * Utility class that handles the UI for the photo bracket application
  */
-class Window {
+class Window implements ComponentListener {
 
     private JLabel leftPic;
     private JLabel rightPic;
     private final JFrame frame;
     private final JFileChooser fileChooser;
     private final File favorites;
+    private Bracket bracket;
+    private ImageFile[] images;
 
     private static final String KEY_LEFT = "LEFT";
     private static final String KEY_RIGHT = "RIGHT";
@@ -35,9 +32,8 @@ class Window {
 
     /**
      * Initialize and show a new GUI window
-     * TODO needs to take in a bracket as a parameter
      */
-    public Window(Main.fileCallback filesChosen) {
+    public Window(Bracket bracket) {
         try { // attempts to set the theme of the window to the system default
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
@@ -46,6 +42,8 @@ class Window {
                     "Look and feel not found - using default");
         }
         fileChooser = fileDialog();
+        this.bracket = bracket;
+        images = new ImageFile[2];
 
         frame = new JFrame("Photo Bracket");
         frame.setMinimumSize(new Dimension(600, 600));
@@ -56,7 +54,7 @@ class Window {
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
         JMenuItem select = new JMenuItem("Select new photos");
-        select.addActionListener(e -> chooseFiles(filesChosen));
+        select.addActionListener(e -> chooseFiles());
         fileMenu.add(select);
 
         fileMenu.addSeparator();
@@ -77,7 +75,18 @@ class Window {
 
         JPanel buttons = makeButtonPanel();
 
-        refreshPics(filesChosen);
+        GridBagConstraints topPanelConstraints = new GridBagConstraints();
+        topPanelConstraints.gridx = 0;
+        topPanelConstraints.gridy = 0;
+        topPanelConstraints.weightx = 1;
+        topPanelConstraints.weighty = 1;
+        if (bracket.isEmpty()) {
+            frame.add(makePromptPanel(), topPanelConstraints);
+        } else {
+            frame.add(makePicPanel(), topPanelConstraints);
+        }
+
+        refreshPics(bracket);
         constraints.gridx = 0;
         constraints.weighty = 0;
         constraints.gridy = 1;
@@ -88,23 +97,26 @@ class Window {
         favorites = new File(".favorites");
     }
 
-    // TODO needs to take a bracket as a parameter
     /**
      * Refreshes the picture view - used for when the photos update (probably outside of direct
      * user interaction, e.i. user selecting left/right/both/neither don't need this since that
      * can update the photos directly)
-     * @param callback  - The callback that gets triggered when the user selects photos
+     * @param bracket  - The bracket to get photos from
      */
-    private void refreshPics(Main.fileCallback callback) {
-        GridBagConstraints constraints = new GridBagConstraints();
-        constraints.gridx = 0;
-        constraints.gridy = 0;
-        constraints.weightx = 1;
-        constraints.weighty = 1;
-        if (true) {
-            frame.add(makePromptPanel(callback), constraints);
-        } else {
-            frame.add(makePicPanel(), constraints);
+    private void refreshPics(Bracket bracket) {
+        this.bracket = bracket;
+        if (images[0] == null || images[1] == null) images =
+                bracket.getNextPair();
+        try {
+            leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
+        } catch (IOException e) {
+            Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
+                    "images");
+        } try {
+            rightPic.setIcon(images[1].getIcon(rightPic.getSize()));
+        } catch (IOException e) {
+            Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
+                    "images");
         }
     }
 
@@ -131,10 +143,9 @@ class Window {
 
     /**
      * Helper method that makes the panel to prompt the user to select some pictures
-     * @param callback  - The callback for when the user selects files
      * @return          - The panel that can be added to the GUI
      */
-    private JPanel makePromptPanel(Main.fileCallback callback) {
+    private JPanel makePromptPanel() {
         JPanel prompt = new JPanel();
 
         prompt.setLayout(new BoxLayout(prompt, BoxLayout.Y_AXIS));
@@ -148,7 +159,7 @@ class Window {
         files.setFont(new Font(null, Font.BOLD, 24));
         files.setBackground(new Color(53, 62, 208));
         files.setAlignmentX(Component.CENTER_ALIGNMENT);
-        files.addActionListener(e -> chooseFiles(callback));
+        files.addActionListener(e -> chooseFiles());
 
         prompt.add(info);
         prompt.add(Box.createRigidArea(new Dimension(0, 15)));
@@ -172,14 +183,13 @@ class Window {
 
     /**
      * Helper method that gets files from the user and passes them to the callback
-     * @param callback  - The callback that will receive the files
      */
-    private void chooseFiles(Main.fileCallback callback) {
+    private void chooseFiles() {
         int result = fileChooser.showOpenDialog(frame);
         if (result == JFileChooser.APPROVE_OPTION) {
-            callback.onFilesSelected(fileChooser.getSelectedFiles());
+            bracket.add(ImageFile.toImageFiles(fileChooser.getSelectedFiles()));
         }
-        refreshPics(callback);
+        refreshPics(bracket);
     }
 
     /**
@@ -382,6 +392,26 @@ class Window {
             case JOptionPane.YES_OPTION:
                 // save the favorites
         }
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        refreshPics(bracket);
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
+
     }
 
     /**
