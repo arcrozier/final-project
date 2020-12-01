@@ -23,7 +23,7 @@ class Window implements ComponentListener {
     private final JFileChooser fileChooser;
     private final File favorites;
     private Bracket bracket;
-    private ImageFile[] images;
+    private ImageFile[] images; // [leftPic, rightPic]
 
     private static final String KEY_LEFT = "LEFT";
     private static final String KEY_RIGHT = "RIGHT";
