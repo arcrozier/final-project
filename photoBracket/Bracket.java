@@ -199,7 +199,7 @@ public class Bracket {
         }
         
         public boolean hasNextPair() { 
-            return files.size() >= 0;
+            return files.size() >= 2;
         }
 
         /**
