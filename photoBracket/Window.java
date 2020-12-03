@@ -293,7 +293,9 @@ class Window implements ComponentListener {
      */
     void populate(Bracket bracket) {
         this.bracket = bracket;
-        images = bracket.getNextPair();
+        if (!bracket.isEmpty()) {
+            images = bracket.getNextPair();
+        }
         refreshPics();
     }
 
