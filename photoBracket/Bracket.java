@@ -197,6 +197,10 @@ public class Bracket {
         public boolean isEmpty() {
             return files.size() == 0;
         }
+        
+        public boolean hasNextPair() { 
+            return files.size() >= 0;
+        }
 
         /**
          * Evaluates whether or not an object is equal to this round
