@@ -74,10 +74,18 @@ public class Bracket {
      *          - null if the bracket is out
      */
     public ImageFile[] getNextPair() {
-        if (roundDone() && delta > 0) {
+        // if (roundDone() && delta > 0) {
+//             currentRound = currentRound.winners;
+//         } else if (roundDone()) return null;
+//         return currentRound.getNextPair();
+        
+        if(!currentRound.winners.isEmpty() && !currentRound.isEmpty() && !currentRound.hasNextPair()) { 
+            // move last item in current to winners
+        }
+        if(!currentRound.isEmpty() && delta > 0) { 
             currentRound = currentRound.winners;
-        } else if (roundDone()) return null;
-        return currentRound.getNextPair();
+        }
+        return currentRound.getNextPair(); 
     }
 
     /**
@@ -151,6 +159,10 @@ public class Bracket {
          */
         public ImageFile[] getNextPair() {
             if (files.size() == 0) return null;
+            if (files.size() < 2) { 
+               return null; 
+            } 
+            // delete from 166 to 179?
             if (files.size() == 1) {
                 ImageFile file = files.remove(0);
                 winners.add(file);
