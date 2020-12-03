@@ -295,6 +295,13 @@ class Window implements ComponentListener {
         this.bracket = bracket;
         if (!bracket.isEmpty()) {
             images = bracket.getNextPair();
+            GridBagConstraints topPanelConstraints = new GridBagConstraints();
+            topPanelConstraints.gridx = 0;
+            topPanelConstraints.gridy = 0;
+            topPanelConstraints.weightx = 1;
+            topPanelConstraints.weighty = 1;
+            frame.add(makePicPanel(), topPanelConstraints);
+
         }
         refreshPics();
     }
