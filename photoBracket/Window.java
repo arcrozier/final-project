@@ -259,7 +259,7 @@ class Window implements ComponentListener {
      */
     private void leftChosen() {
         Logger.getLogger(getClass().getName()).info("Left chosen - not yet implemented");
-        Bracket.selected(images[0]);
+        bracket.selected(images[0]);
     }
 
     /**
@@ -267,7 +267,7 @@ class Window implements ComponentListener {
      */
     private void rightChosen() {
         Logger.getLogger(getClass().getName()).info("Right chosen - not yet implemented");
-        Bracket.selected(images[1]);
+        bracket.selected(images[1]);
     }
 
     /**
@@ -275,7 +275,7 @@ class Window implements ComponentListener {
      */
     private void bothChosen() {
         Logger.getLogger(getClass().getName()).info("Both chosen - not yet implemented");
-        Bracket.selected(images[0], images[1]);
+        bracket.selected(images[0], images[1]);
     }
 
     /**
@@ -283,7 +283,7 @@ class Window implements ComponentListener {
      */
     private void newPics() {
         Logger.getLogger(getClass().getName()).info("Get new pics - not yet implemented");
-        Bracket.selected(Bracket.getNewFiles(images[0], images[1]));
+        bracket.selected(bracket.getNewFiles(images[0], images[1]));
     }
 
     /**
