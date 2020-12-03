@@ -190,13 +190,11 @@ public class Bracket {
         }
 
         /**
-         * Whether there are any more photos to be compared. If there is one photo left, it
-         * removes it from the list and adds it to the winners
+         * Whether there are any more photos to be compared.
          *
          * @return - True if there are no more photos, false otherwise
          */
         public boolean isEmpty() {
-            if (files.size() == 1) getNextPair();
             return files.size() == 0;
         }
 
