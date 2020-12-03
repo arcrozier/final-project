@@ -467,7 +467,7 @@ class Window implements ComponentListener {
             if (f.isDirectory()) return true;
             String extension = getExtension(f.getName());
             if (extension == null) return false;
-            switch (extension) {
+            switch (extension.toLowerCase()) {
                 case "jpeg":
                 case "jpg":
                 case "gif":
