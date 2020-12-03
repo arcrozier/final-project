@@ -74,6 +74,7 @@ public class Bracket {
      *          - null if the bracket is out
      */
     public ImageFile[] getNextPair() {
+        // delete from 77 - 82?
         // if (roundDone() && delta > 0) {
 //             currentRound = currentRound.winners;
 //         } else if (roundDone()) return null;
@@ -162,7 +163,7 @@ public class Bracket {
             if (files.size() < 2) { 
                return null; 
             } 
-            // delete from 166 to 179?
+            // delete from 166 to 180?
             if (files.size() == 1) {
                 ImageFile file = files.remove(0);
                 winners.add(file);
