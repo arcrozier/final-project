@@ -28,7 +28,8 @@ public class Bracket {
      * Signals whether or not the bracket is essentially uninitialized (i.e. contains no images).
      * This is slightly different from !hasNextPair(), which would return true when no changes
      * were made to the last round while isEmpty() would return false in that case
-     * @return  - True if the bracket is empty, false otherwise
+     *
+     * @return - True if the bracket is empty, false otherwise
      */
     public boolean isEmpty() {
         return currentRound.isEmpty() && currentRound.winners == null;
@@ -38,23 +39,17 @@ public class Bracket {
      * Check for whether the bracket has more images
      * This is slightly different from !isEmpty(), which would return true when no changes
      * were made to the last round while hasNextPair() would return false in that case
-     * @return  - True if you can still get more images from this bracket, false otherwise
+     *
+     * @return - True if you can still get more images from this bracket, false otherwise
      */
     public boolean hasNextPair() {
         return !currentRound.isEmpty() && delta != 0;
     }
 
     /**
-     * Helper method that signals whether the round is empty
-     * @return  - True if the current round is empty, false otherwise
-     */
-    private boolean roundDone() {
-        return currentRound.isEmpty();
-    }
-
-    /**
      * Adds the image to the bracket
-     * @param file  - the image to add
+     *
+     * @param file - the image to add
      */
     public void add(ImageFile file) {
         currentRound.add(file);
@@ -62,6 +57,7 @@ public class Bracket {
 
     /**
      * Adds a list of files to the bracket
+     *
      * @param files - the one or more files to be added
      */
     public void add(ImageFile... files) {
@@ -70,27 +66,23 @@ public class Bracket {
 
     /**
      * Gets the next pair of images
-     * @return  - 2 ImageFiles if there are more images
-     *          - null if the bracket is out
+     *
+     * @return - 2 ImageFiles if there are more images
+     * - null if the bracket is out
      */
     public ImageFile[] getNextPair() {
-        // delete from 77 - 82?
-        // if (roundDone() && delta > 0) {
-//             currentRound = currentRound.winners;
-//         } else if (roundDone()) return null;
-//         return currentRound.getNextPair();
-        
-        if(!currentRound.winners.isEmpty() && !currentRound.isEmpty() && !currentRound.hasNextPair()) { 
+        if (!currentRound.winners.isEmpty() && !currentRound.isEmpty() && !currentRound.hasNextPair()) {
             // move last item in current to winners
         }
-        if(!currentRound.isEmpty() && delta > 0) { 
+        if (!currentRound.isEmpty() && delta > 0) {
             currentRound = currentRound.winners;
         }
-        return currentRound.getNextPair(); 
+        return currentRound.getNextPair();
     }
 
     /**
      * Adds the file(s) as winners
+     *
      * @param files - The file(s) selected by the user
      */
     public void selected(ImageFile... files) {
@@ -102,8 +94,9 @@ public class Bracket {
 
     /**
      * Restores the state of the current round and gets two new images
+     *
      * @param files - The files that were not to be compared
-     * @return      - Two new files (or the same files, if the round is basically empty)
+     * @return - Two new files (or the same files, if the round is basically empty)
      */
     public ImageFile[] getNewFiles(ImageFile... files) {
         for (ImageFile file : files) {
@@ -135,7 +128,7 @@ public class Bracket {
                 this.files = new ArrayList<>();
                 winners = null;
             }
-                // One can also do comparisons here but this is probably not the most efficient
+            // One can also do comparisons here but this is probably not the most efficient
             else {
                 this.files = new ArrayList<>(Arrays.asList(files));
                 // Creates a round for the winners - careful with a recursive infinite loop here
@@ -159,10 +152,9 @@ public class Bracket {
          * - Null if there aren't enough files left to compare
          */
         public ImageFile[] getNextPair() {
-            if (files.size() == 0) return null;
-            if (files.size() < 2) { 
-               return null; 
-            } 
+            if (files.size() < 2) {
+                return null;
+            }
 
             ImageFile[] pair = new ImageFile[2];
             pair[0] = files.remove(0);
@@ -196,15 +188,16 @@ public class Bracket {
         public boolean isEmpty() {
             return files.size() == 0;
         }
-        
-        public boolean hasNextPair() { 
+
+        public boolean hasNextPair() {
             return files.size() >= 2;
         }
 
         /**
          * Evaluates whether or not an object is equal to this round
+         *
          * @param o - The other object to be compared (must be a Round object to return true)
-         * @return  - True if they are the same, false otherwise
+         * @return - True if they are the same, false otherwise
          */
         @Override
         public boolean equals(Object o) {
@@ -216,7 +209,7 @@ public class Bracket {
 
         /**
          * Method template that can be used to implement undo functionality at the Round level
-         *
+         * <p>
          * NOTE: This does not yet work at all
          */
         public void undo() {
@@ -227,7 +220,7 @@ public class Bracket {
 
         /**
          * Method template that can be used to implement redo functionality at the Round level
-         *
+         * <p>
          * NOTE: This does not yet work at all
          */
         public void redo() {
@@ -238,8 +231,9 @@ public class Bracket {
 
         /**
          * Helper method to switch an action
-         * @param action    - The action to be switched
-         * @return          - The opposite action
+         *
+         * @param action - The action to be switched
+         * @return - The opposite action
          */
         private RoundAction reverseAction(RoundAction action) {
             if (action == null) return null;
@@ -253,7 +247,8 @@ public class Bracket {
 
         /**
          * Performs an action
-         * @param action    - The action to perform
+         *
+         * @param action - The action to perform
          */
         private void performAction(RoundAction action) {
             if (action == null) return;
@@ -279,18 +274,21 @@ public class Bracket {
             public final List<ImageFile> listModified;
             public final ImageFile[] filesModified;
             public final int[] indices;
+
             public enum Action {
                 REMOVE,
                 ADD
             }
+
             public final Action action;
             public final RoundAction relatedAction;
 
             /**
              * Creates a new action for the round
-             * @param file      - The files that were modified
-             * @param index     - The indices of the files that were modified
-             * @param action    - The action that was taken on the files
+             *
+             * @param file   - The files that were modified
+             * @param index  - The indices of the files that were modified
+             * @param action - The action that was taken on the files
              * @throws IllegalArgumentException - If the length of index and file are not the same
              */
             public RoundAction(List<ImageFile> listModified, ImageFile[] file, int[] index, Action action,

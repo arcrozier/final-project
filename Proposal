@@ -39,7 +39,7 @@ Outcomes:
     A good outcome for this project would be if Photo Bracket would allow the user to choose their
     favorite between two randomly selected photos from a static, predetermined collection of
     pictures stored in the app, for multiple round. This selecting process will continue until
-    the user is statisfied with all remaining pictures and/or has reached their designated
+    the user is satisfied with all remaining pictures and/or has reached their designated
     target number of pictures. A better outcome would be if Photo Bracket allowed users to upload
     their own photos to the bracket, played upbeat music in the background, and displayed all the
     pictures in a bracket structure. The best outcome would build on all previous functions but
@@ -49,12 +49,12 @@ Outcomes:
     music.  
 
 New skills: 
-    This project will give us the oppurtunity to learn how to process and present visual
+    This project will give us the opportunity to learn how to process and present visual
     and audio media. This may lead us to explore Java libraries that were not discussed in this
     course. Further, we will also learn how to allow users upload files to be used by the program. 
 
 Topics to research: 
-    Completing Photo Bracket will require us to research Java's syntax for handling, analyzinig,
+    Completing Photo Bracket will require us to research Java's syntax for handling, analyzing,
     and displaying images. Similarly, we will need to research how Java reads and plays audio files. 
     We will also investigate the concept of comparing images to determine similarities. This will
     include assessing an image's overall components (for example, are there people in the image?
@@ -62,7 +62,7 @@ Topics to research:
 
 Who will do what:
 
-    Aragorn will be responsible for managing the  graphical user interface. This will incude
+    Aragorn will be responsible for managing the  graphical user interface. This will include
     allowing the selection of pictures, displaying two pictures at a time with buttons to select
     one or both, and exporting the final picture(s).
 

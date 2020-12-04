@@ -18,8 +18,9 @@ public class ImageFile extends File {
 
     /**
      * Constructs a new ImageFile for the provided file path
-     * @param fileName  - The path to the file. This should be a file path to an image that
-     *                  exists
+     *
+     * @param fileName - The path to the file. This should be a file path to an image that
+     *                 exists
      */
     public ImageFile(String fileName) {
         super(fileName);
@@ -30,7 +31,8 @@ public class ImageFile extends File {
 
     /**
      * Constructs a new ImageFile based on the given file
-     * @param file  - The file of an image to turn into an ImageFile
+     *
+     * @param file - The file of an image to turn into an ImageFile
      */
     public ImageFile(File file) {
         this(file.getAbsolutePath());
@@ -38,10 +40,11 @@ public class ImageFile extends File {
 
     /**
      * Gets an image that can be set to a JPanel/JLabel to display the image
-     * @param size     - The size of the container the image will be in
-     * @return          - The ImageIcon that can be used with JLabel.setImageIcon()
-     * @throws IOException      - If there's an error reading the file
-     * @throws AssertionError   - If the file isn't an image
+     *
+     * @param size - The size of the container the image will be in
+     * @return - The ImageIcon that can be used with JLabel.setIcon()
+     * @throws IOException    - If there's an error reading the file
+     * @throws AssertionError - If the file isn't an image
      */
     public ImageIcon getIcon(Dimension size) throws IOException {
         if (dimensions.equals(size)) return imageIcon;
@@ -58,9 +61,10 @@ public class ImageFile extends File {
 
     /**
      * Helper method to get the ratio (current : target) between two numbers
-     * @param current   - The starting value
-     * @param target    - The target
-     * @return          - The amount that current needs to be multiplied by to get target
+     *
+     * @param current - The starting value
+     * @param target  - The target
+     * @return - The amount that current needs to be multiplied by to get target
      */
     private double getScaleFactor(int current, int target) {
         return (double) current / (double) target;
@@ -69,9 +73,10 @@ public class ImageFile extends File {
     /**
      * Determines the appropriate scale factor to fit one dimension inside the other while
      * maintaining aspect ratio
-     * @param current   - The starting dimensions
-     * @param target    - The target dimensions
-     * @return          - The value that the height and width of current need to be
+     *
+     * @param current - The starting dimensions
+     * @param target  - The target dimensions
+     * @return - The value that the height and width of current need to be
      * multiplied by to fit current entirely into target
      */
     private double getScaleFactorToFit(Dimension current, Dimension target) {

@@ -109,7 +109,8 @@ class Window implements ComponentListener {
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
                     "images");
-        } try {
+        }
+        try {
             rightPic.setIcon(images[1].getIcon(rightPic.getSize()));
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
@@ -120,7 +121,8 @@ class Window implements ComponentListener {
     /**
      * Helper method to make the panel for displaying the pictures. Initializes the two global
      * JLabels for pictures and adds them to a JPanel
-     * @return  - A JPanel that contains the pictures
+     *
+     * @return - A JPanel that contains the pictures
      */
     private JPanel makePicPanel() {
         JPanel pictures = new JPanel();
@@ -140,7 +142,8 @@ class Window implements ComponentListener {
 
     /**
      * Helper method that makes the panel to prompt the user to select some pictures
-     * @return          - The panel that can be added to the GUI
+     *
+     * @return - The panel that can be added to the GUI
      */
     private JPanel makePromptPanel() {
         JPanel prompt = new JPanel();
@@ -167,7 +170,8 @@ class Window implements ComponentListener {
 
     /**
      * Constructs a file dialog for the user to select photos. Should only be called once per Window
-     * @return  - The file chooser that is ready to be shown to the user
+     *
+     * @return - The file chooser that is ready to be shown to the user
      */
     private JFileChooser fileDialog() {
         JFileChooser fileChooser = new JFileChooser();
@@ -191,7 +195,8 @@ class Window implements ComponentListener {
 
     /**
      * Helper method to set up the button panel
-     * @return  - A JPanel which contains all the buttons
+     *
+     * @return - A JPanel which contains all the buttons
      */
     private JPanel makeButtonPanel() {
         JPanel buttons = new JPanel();
@@ -308,7 +313,8 @@ class Window implements ComponentListener {
 
     /**
      * Sets the bracket for this Window (alias for populate(Bracket bracket))
-     * @param bracket   - The bracket to use for choosing files
+     *
+     * @param bracket - The bracket to use for choosing files
      */
     void setBracket(Bracket bracket) {
         populate(bracket);
@@ -388,7 +394,7 @@ class Window implements ComponentListener {
                         "to continue?",
                 "Confirm clearing favorites",
                 JOptionPane.YES_NO_OPTION
-                );
+        );
         if (proceed != JOptionPane.YES_OPTION) return;
         try {
             Files.write(favorites.toPath(), new byte[0], StandardOpenOption.TRUNCATE_EXISTING);
@@ -447,8 +453,9 @@ class Window implements ComponentListener {
 
         /**
          * Helper method that returns the file extension for a given file name
+         *
          * @param f - The file name to get the extension for
-         * @return  - The file extension or null if it doesn't have one
+         * @return - The file extension or null if it doesn't have one
          */
         private String getExtension(String f) {
             int i = f.lastIndexOf('.');
@@ -459,8 +466,9 @@ class Window implements ComponentListener {
         /**
          * Determines whether or not a file is an image (also accepts directories to allow the
          * user to navigate)
+         *
          * @param f - The file to be checked
-         * @return  - True if the file is an image or a directory, false otherwise
+         * @return - True if the file is an image or a directory, false otherwise
          */
         @Override
         public boolean accept(File f) {
@@ -481,7 +489,7 @@ class Window implements ComponentListener {
         }
 
         /**
-         * @return  - A description of this filter
+         * @return - A description of this filter
          */
         @Override
         public String getDescription() {
