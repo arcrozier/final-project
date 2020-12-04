@@ -67,4 +67,5 @@ This is a File with some extra methods for being an image. It has the ability to
 * "Selecting" photos does nothing
 * Photos are not shown based on similarity but rather by how far apart they are from each other
  in the order that they're picked
+* Currently nothing happens when the user finishes selecting photos  
 * There are outlines of an undo/redo system but they aren't implemented in any meaningful way
