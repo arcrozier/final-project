@@ -163,21 +163,7 @@ public class Bracket {
             if (files.size() < 2) { 
                return null; 
             } 
-            // delete from 166 to 180?
-            if (files.size() == 1) {
-                ImageFile file = files.remove(0);
-                winners.add(file);
-                /* This became a hot mess so more thought needs to be put in to how to implement
-                this (if we even want to implement it)
 
-                RoundAction relatedAction = new RoundAction(winners, new ImageFile[] {file},
-                        new int[] {winners.})
-                RoundAction mainAction = new RoundAction(files, new ImageFile[] {file},
-                        new int[] {0}, RoundAction.Action.REMOVE)
-
-                 */
-                return null;
-            }
             ImageFile[] pair = new ImageFile[2];
             pair[0] = files.remove(0);
             pair[1] = files.remove(files.size() - 1);
