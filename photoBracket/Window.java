@@ -22,6 +22,8 @@ class Window implements ComponentListener {
     private final JFrame frame;
     private final JFileChooser fileChooser;
     private final File favorites;
+    private final JPanel contentPanel;
+    private final CardLayout contentLayout;
     private Bracket bracket;
     private ImageFile[] images; // [leftPic, rightPic]
 
@@ -29,6 +31,8 @@ class Window implements ComponentListener {
     private static final String KEY_RIGHT = "RIGHT";
     private static final String KEY_UP = "UP";
     private static final String KEY_DOWN = "DOWN";
+    private static final String PROMPT_PANEL = "prompt";
+    private static final String PIC_PANEL = "pics";
 
     /**
      * Initialize and show a new GUI window
@@ -75,16 +79,26 @@ class Window implements ComponentListener {
 
         JPanel buttons = makeButtonPanel();
 
+        contentLayout = new CardLayout();
+        contentPanel = new JPanel(contentLayout);
+
         GridBagConstraints topPanelConstraints = new GridBagConstraints();
         topPanelConstraints.gridx = 0;
         topPanelConstraints.gridy = 0;
         topPanelConstraints.weightx = 1;
         topPanelConstraints.weighty = 1;
+        topPanelConstraints.fill = GridBagConstraints.BOTH;
+
+        contentPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 10));
+        contentPanel.add(makePromptPanel(), PROMPT_PANEL);
+        contentPanel.add(makePicPanel(), PIC_PANEL);
         if (bracket.isEmpty()) {
-            frame.add(makePromptPanel(), topPanelConstraints);
+            contentLayout.show(contentPanel, PROMPT_PANEL);
         } else {
-            frame.add(makePicPanel(), topPanelConstraints);
+            contentLayout.show(contentPanel, PIC_PANEL);
         }
+
+        frame.add(contentPanel, topPanelConstraints);
 
         populate(bracket);
         constraints.gridx = 0;
@@ -103,7 +117,9 @@ class Window implements ComponentListener {
      * can update the photos directly)
      */
     private void refreshPics() {
+        System.out.println("Refreshing: " + images[0] + " and " + images[1]);
         if (images[0] == null || images[1] == null) return;
+        System.out.println(leftPic.getSize() + ", " + rightPic.getSize());
         try {
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
         } catch (IOException e) {
@@ -298,18 +314,16 @@ class Window implements ComponentListener {
      */
     void populate(Bracket bracket) {
         this.bracket = bracket;
-        System.out.println(bracket);
+        System.out.println(bracket + " " + bracket.hasNextPair());
         if (bracket.hasNextPair()) {
             images = bracket.getNextPair();
-            GridBagConstraints topPanelConstraints = new GridBagConstraints();
-            topPanelConstraints.gridx = 0;
-            topPanelConstraints.gridy = 0;
-            topPanelConstraints.weightx = 1;
-            topPanelConstraints.weighty = 1;
-            frame.add(makePicPanel(), topPanelConstraints);
+            contentLayout.show(contentPanel, PIC_PANEL);
 
+        } else {
+            contentLayout.show(contentPanel, PROMPT_PANEL);
         }
         refreshPics();
+        frame.validate();
     }
 
     /**
