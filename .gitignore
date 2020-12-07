@@ -2,3 +2,4 @@
 .favorites
 /out/
 *.class
+*.DS_Store

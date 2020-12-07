@@ -43,7 +43,16 @@ public class Bracket {
      * @return - True if you can still get more images from this bracket, false otherwise
      */
     public boolean hasNextPair() {
-        return !currentRound.isEmpty() && delta != 0;
+        if (currentRound.hasNextPair()) {
+            return true;
+        }
+        if (currentRound.isEmpty() && delta == 0) { 
+            return false;
+        } 
+        if (!currentRound.isEmpty() && (currentRound.winners != null && !currentRound.winners.isEmpty())) {
+            return true;
+        }
+        return false;
     }
 
     /**
