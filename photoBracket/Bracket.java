@@ -48,11 +48,8 @@ public class Bracket {
         }
         if (currentRound.isEmpty() && delta == 0) { 
             return false;
-        } 
-        if (!currentRound.isEmpty() && (currentRound.winners != null && !currentRound.winners.isEmpty())) {
-            return true;
         }
-        return false;
+        return !currentRound.isEmpty() && (currentRound.winners != null && !currentRound.winners.isEmpty());
     }
 
     /**
@@ -112,6 +109,14 @@ public class Bracket {
             currentRound.add(file);
         }
         return getNextPair();
+    }
+
+    @Override
+    public String toString() {
+        if (currentRound.winners != null) {
+            return currentRound.winners.toString() + "\n" + currentRound.toString();
+        }
+        return currentRound.toString();
     }
 
     /**
@@ -214,6 +219,11 @@ public class Bracket {
             Set<ImageFile> theseFiles = new HashSet<>(this.files);
             Set<ImageFile> otherFiles = new HashSet<>(((Round) o).files);
             return theseFiles.equals(otherFiles);
+        }
+
+        @Override
+        public String toString() {
+            return files.toString();
         }
 
         /**
