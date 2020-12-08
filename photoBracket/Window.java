@@ -89,7 +89,6 @@ class Window implements ComponentListener {
         topPanelConstraints.weighty = 1;
         topPanelConstraints.fill = GridBagConstraints.BOTH;
 
-        contentPanel.setBorder(BorderFactory.createLineBorder(Color.BLUE, 10));
         contentPanel.add(makePromptPanel(), PROMPT_PANEL);
         contentPanel.add(makePicPanel(), PIC_PANEL);
         if (bracket.isEmpty()) {
@@ -124,13 +123,13 @@ class Window implements ComponentListener {
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
-                    "images");
+                    "left image");
         }
         try {
             rightPic.setIcon(images[1].getIcon(rightPic.getSize()));
         } catch (IOException e) {
             Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
-                    "images");
+                    "right image");
         }
     }
 
@@ -146,11 +145,10 @@ class Window implements ComponentListener {
         leftPic = new JLabel();
         rightPic = new JLabel();
 
-        leftPic.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
-        rightPic.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
-
         GridBagConstraints picsConstraints = new GridBagConstraints();
         picsConstraints.fill = GridBagConstraints.BOTH;
+        picsConstraints.weighty = 1;
+        picsConstraints.weightx = 1;
         picsConstraints.gridy = 0;
         picsConstraints.gridx = 0;
         pictures.add(leftPic, picsConstraints);
@@ -181,9 +179,11 @@ class Window implements ComponentListener {
         files.setAlignmentX(Component.CENTER_ALIGNMENT);
         files.addActionListener(e -> chooseFiles());
 
+        prompt.add(Box.createVerticalGlue());
         prompt.add(info);
         prompt.add(Box.createRigidArea(new Dimension(0, 15)));
         prompt.add(files);
+        prompt.add(Box.createVerticalGlue());
 
         return prompt;
     }

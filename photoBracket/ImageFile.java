@@ -67,7 +67,7 @@ public class ImageFile extends File {
      * @return - The amount that current needs to be multiplied by to get target
      */
     private double getScaleFactor(int current, int target) {
-        return (double) current / (double) target;
+        return (double) target / (double) current;
     }
 
     /**
