@@ -310,6 +310,17 @@ class Window implements ComponentListener {
         Logger.getLogger(getClass().getName()).info("Get new pics - not yet implemented");
         images = bracket.getNewFiles(images[0], images[1]);
     }
+    
+    /**
+     * Helper method that updates the panel based on the button selected
+     */
+    private void updatePanel() { 
+        if (bracket.hasNextPair()) {
+           refreshPics();
+        } else { 
+           done();
+        }
+    }
 
     /**
      * Populates the window with the next two pictures pulled from the bracket (useful when
