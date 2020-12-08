@@ -43,20 +43,29 @@ public class ImageFile extends File {
      *
      * @param size - The size of the container the image will be in
      * @return - The ImageIcon that can be used with JLabel.setIcon()
-     * @throws IOException    - If there's an error reading the file
-     * @throws AssertionError - If the file isn't an image
+     * @throws IOException          - If there's an error reading the file
+     * @throws NullPointerException - If the file isn't an image or is corrupted
      */
     public ImageIcon getIcon(Dimension size) throws IOException {
         if (dimensions.equals(size)) return imageIcon;
         dimensions = size;
         if (image == null) image = ImageIO.read(this);
-        assert image != null;
         double scale = getScaleFactorToFit(new Dimension(image.getWidth(), image.getHeight())
                 , size);
         // height -1 signals that the height should be whatever keeps the aspect ratio
         return imageIcon =
                 new ImageIcon(image.getScaledInstance((int) (image.getWidth() * scale),
                         -1, Image.SCALE_SMOOTH));
+    }
+
+    /**
+     * Returns the absolute path to the image referenced in this file
+     *
+     * @return - The absolute path to the image
+     */
+    @Override
+    public String toString() {
+        return getAbsolutePath();
     }
 
     /**
@@ -84,6 +93,12 @@ public class ImageFile extends File {
                 getScaleFactor(current.height, target.height));
     }
 
+    /**
+     * Static helper method that converts an array of Files to an array of ImageFiles
+     *
+     * @param files - The files to be converted
+     * @return - The converted ImageFiles
+     */
     public static ImageFile[] toImageFiles(File... files) {
         ImageFile[] imageFiles = new ImageFile[files.length];
         for (int i = 0; i < files.length; i++) {

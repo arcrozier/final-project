@@ -43,10 +43,10 @@ public class Bracket {
      * @return - True if you can still get more images from this bracket, false otherwise
      */
     public boolean hasNextPair() {
-        return currentRound.hasNextPair() || (delta && (
-                (!currentRound.isEmpty() && currentRound.winners != null && !currentRound.winners.isEmpty()) ||
-                (currentRound.winners != null && currentRound.winners.hasNextPair()))
-        );
+        return currentRound.hasNextPair() || (delta && currentRound.winners != null && (
+                (!currentRound.isEmpty() && !currentRound.winners.isEmpty()) ||
+                        (currentRound.winners.hasNextPair())
+        ));
     }
 
     /**
@@ -90,7 +90,7 @@ public class Bracket {
      * @param files - The file(s) selected by the user
      */
     public void selected(ImageFile... files) {
-        if (files.length != 2) delta = true;
+        delta |= files.length != 2;
         for (ImageFile file : files) {
             currentRound.winners.add(file);
         }
@@ -107,6 +107,39 @@ public class Bracket {
         }
     }
 
+    /**
+     * Tells the bracket to continue providing images even if no changes were made in the last round
+     */
+    public void ignoreDone() {
+        delta = true;
+    }
+
+    /**
+     * Gets the image files in the current round
+     *
+     * @return - A list of all image files in the current round
+     */
+    public List<ImageFile> getCurrentImageFiles() {
+        return currentRound.getFiles();
+    }
+
+    /**
+     * Gets all image files remaining in the whole bracket
+     *
+     * @return - A list of all image files in the bracket
+     */
+    public List<ImageFile> getAllImageFiles() {
+        if (currentRound.winners == null) return getCurrentImageFiles();
+        List<ImageFile> files = currentRound.getFiles();
+        files.addAll(currentRound.winners.getFiles());
+        return files;
+    }
+
+    /**
+     * Two lines representing the winners round (as a list) and the current round (as a list)
+     *
+     * @return - The String representation of this Bracket
+     */
     @Override
     public String toString() {
         if (currentRound.winners != null) {
@@ -117,6 +150,7 @@ public class Bracket {
 
     /**
      * A Round represents one level of the bracket and contains all the photos in that round.
+     * Should be modular enough it can be split into its own file if necessary/useful
      */
     private static class Round {
 
@@ -154,9 +188,7 @@ public class Bracket {
         }
 
         /**
-         * Gets the next pair of photos to be compared. Currently just returns adjacent photos in
-         * the list but the implementation can be easily changed to do something more complicated
-         * If there is only one photo left, the file is removed from the list and added to winners
+         * Gets the next pair of photos to be compared
          *
          * @return - Two files that can be displayed to the user
          * - Null if there aren't enough files left to compare
@@ -165,16 +197,22 @@ public class Bracket {
             if (files.size() < 2) {
                 return null;
             }
-
+            // avoids repeatedly showing the user the same two files by pulling one from the
+            // front and one from the back
             ImageFile[] pair = new ImageFile[2];
             pair[0] = files.remove(0);
             pair[1] = files.remove(files.size() - 1);
             return pair;
         }
 
+        /**
+         * Retrieves one image and removes it from the Round
+         *
+         * @return - A single image, or null if there are no more images in the Round
+         */
         public ImageFile getNextImage() {
             if (!files.isEmpty()) {
-                return files.remove(0);
+                return files.remove(files.size() - 1);
             }
             return null;
         }
@@ -188,17 +226,11 @@ public class Bracket {
          */
         public void add(ImageFile file) {
             files.add(file);
-            /*
-            undoHistory.push(new RoundAction(files, new ImageFile[]{file},
-                    new int[]{files.size() - 1},
-                    RoundAction.Action.REMOVE, null));
-
-             */
             if (winners == null) winners = new Round();
         }
 
         /**
-         * Whether there are any more photos to be compared.
+         * Whether there are any more photos in this round
          *
          * @return - True if there are no more photos, false otherwise
          */
@@ -206,8 +238,21 @@ public class Bracket {
             return files.size() == 0;
         }
 
+        /**
+         * @return - True if this round can provide a pair, false otherwise
+         */
         public boolean hasNextPair() {
             return files.size() >= 2;
+        }
+
+        /**
+         * Returns a list of the files in this round. This list can be modified without side effects
+         *
+         * @return - A list of all the files in the round
+         */
+        public List<ImageFile> getFiles() {
+            return new ArrayList<>(files); // prevent the private list from being modified and
+            // breaking encapsulation
         }
 
         /**
@@ -224,6 +269,9 @@ public class Bracket {
             return theseFiles.equals(otherFiles);
         }
 
+        /**
+         * @return - All the images in the Round formatted as a list
+         */
         @Override
         public String toString() {
             return files.toString();

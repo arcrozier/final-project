@@ -8,20 +8,23 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * @author Aragorn Crozier
  * Utility class that handles the UI for the photo bracket application
  */
-class Window implements ComponentListener {
+class Window implements ComponentListener, WindowListener {
 
     private JLabel leftPic;
     private JLabel rightPic;
     private final JFrame frame;
     private final JFileChooser fileChooser;
     private final File favorites;
+    private final File preferences;
+    private Map<String, String> settings;
     private final JPanel contentPanel;
     private final CardLayout contentLayout;
     private Bracket bracket;
@@ -33,6 +36,7 @@ class Window implements ComponentListener {
     private static final String KEY_DOWN = "DOWN";
     private static final String PROMPT_PANEL = "prompt";
     private static final String PIC_PANEL = "pics";
+    private static final String PREFERENCE_DEFAULT_DIR = "default directory";
 
     /**
      * Initialize and show a new GUI window
@@ -45,13 +49,31 @@ class Window implements ComponentListener {
             Logger.getLogger(getClass().getName()).warning(
                     "Look and feel not found - using default");
         }
+
+        preferences = new File(".prefs");
+        try {
+            settings = new HashMap<>();
+            // creates a new file if one doesn't already exist. Reads the preferences if one does
+            if (!preferences.createNewFile()) {
+                List<String> lines = Files.readAllLines(preferences.toPath());
+                for (String line : lines) {
+                    String[] preference = line.split("=");
+                    if (preference.length != 2) continue; // ignore any preference that is not
+                    // correctly formatted
+                    settings.put(preference[0], preference[1]);
+                }
+            }
+        } catch (IOException e) {
+            settings = new HashMap<>();
+        }
+
         fileChooser = fileDialog();
         this.bracket = bracket;
         images = new ImageFile[2];
 
         frame = new JFrame("Photo Bracket");
         frame.setMinimumSize(new Dimension(600, 600));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
         frame.setLayout(new GridBagLayout());
 
@@ -107,8 +129,10 @@ class Window implements ComponentListener {
         frame.add(buttons, constraints);
         frame.setVisible(true);
         frame.addComponentListener(this);
+        frame.addWindowListener(this);
 
         favorites = new File(".favorites");
+
     }
 
     /**
@@ -117,21 +141,35 @@ class Window implements ComponentListener {
      * can update the photos directly)
      */
     private void refreshPics() {
-        System.out.println(bracket);
-        System.out.println(images);
         if (images[0] == null || images[1] == null) return;
+        int which = 0;
         try {
+            leftPic.setMaximumSize(new Dimension(frame.getWidth() / 2, frame.getHeight()));
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
-        } catch (IOException e) {
-            Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
-                    "left image");
+            which += 1;
+        } catch (IOException | NullPointerException e) {
+            Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
+                    "occurred while loading left image: " + images[0].toString());
         }
         try {
+            rightPic.setMaximumSize(new Dimension(frame.getWidth() / 2, frame.getHeight()));
             rightPic.setIcon(images[1].getIcon(rightPic.getSize()));
-        } catch (IOException e) {
-            Logger.getLogger(getClass().getName()).warning("IOException occurred while loading " +
-                    "right image");
+            which += 2;
+        } catch (IOException | NullPointerException e) {
+            Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
+                    "occurred while loading right image: " + images[1].toString());
         }
+        switch (which) {
+            case 0: // both failed
+                updatePanel();
+                break;
+            case 1: // right failed
+                leftChosen();
+                break;
+            case 2: // left failed
+                rightChosen();
+                break;
+        } // do nothing if which == 3, since that would be both successful
     }
 
     /**
@@ -196,6 +234,9 @@ class Window implements ComponentListener {
      */
     private JFileChooser fileDialog() {
         JFileChooser fileChooser = new JFileChooser();
+        if (settings.containsKey(PREFERENCE_DEFAULT_DIR)) {
+            fileChooser.setCurrentDirectory(new File(settings.get(PREFERENCE_DEFAULT_DIR)));
+        }
         fileChooser.setDialogTitle("Select images to sort");
         fileChooser.setFileFilter(new ImageFilter());
         fileChooser.setAcceptAllFileFilterUsed(false);
@@ -204,14 +245,15 @@ class Window implements ComponentListener {
     }
 
     /**
-     * Helper method that gets files from the user and passes them to the callback
+     * Helper method that gets files from the user
      */
     private void chooseFiles() {
         int result = fileChooser.showOpenDialog(frame);
+        settings.put(PREFERENCE_DEFAULT_DIR, fileChooser.getCurrentDirectory().getPath());
         if (result == JFileChooser.APPROVE_OPTION) {
             bracket.add(ImageFile.toImageFiles(fileChooser.getSelectedFiles()));
         }
-        populate(bracket);
+        if (images[0] == null || images[1] == null) populate(bracket);
     }
 
     /**
@@ -300,7 +342,7 @@ class Window implements ComponentListener {
      * Helper method that executes when the user wants to choose both pictures
      */
     private void bothChosen() {
-        bracket.selected(images[0], images[1]);
+        bracket.selected(images);
         updatePanel();
     }
 
@@ -308,19 +350,19 @@ class Window implements ComponentListener {
      * Helper method to retrieve new pictures from the bracket
      */
     private void newPics() {
-        bracket.getNewFiles(images[0], images[1]);
+        bracket.getNewFiles(images);
         updatePanel();
     }
-    
+
     /**
      * Helper method that updates the panel based on the button selected
      */
-    private void updatePanel() { 
+    private void updatePanel() {
         if (bracket.hasNextPair()) {
-           images = bracket.getNextPair();
-           refreshPics();
-        } else { 
-           done();
+            images = bracket.getNextPair();
+            refreshPics();
+        } else {
+            done();
         }
     }
 
@@ -447,16 +489,54 @@ class Window implements ComponentListener {
                 null,
                 options,
                 options[0]);
-        switch (after) {
-            case JOptionPane.CLOSED_OPTION:
-            case JOptionPane.NO_OPTION:
-                // continue sorting
-                break;
-            case JOptionPane.YES_OPTION:
-                // save the favorites
+        // saves files to favorites
+        if (after == JOptionPane.YES_OPTION) {
+            if (!writeListToFile(bracket.getAllImageFiles(), favorites.toPath(),
+                    StandardOpenOption.APPEND)) {
+                JOptionPane.showMessageDialog(frame,
+                        "An error occurred while saving favorites. You can try again and see " +
+                                "if the error persists",
+                        "Unable to save",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                done();
+            }
+        } else { // continues sorting
+            newPics();
+            bracket.ignoreDone();
+            updatePanel();
         }
     }
 
+    /**
+     * Writes any list to file using the object's toString() methods
+     *
+     * @param list   - The list to write
+     * @param file   - The path to the file to write to
+     * @param option - The option to use when writing the file
+     * @param <T>    - Accepts any Object type for the list
+     * @return - True if files were written successfully, false otherwise
+     */
+    private <T> boolean writeListToFile(List<T> list, Path file, StandardOpenOption option) {
+        StringBuilder sb = new StringBuilder();
+        for (Object obj : list) {
+            sb.append(obj.toString());
+            sb.append('\n');
+        }
+        try {
+            Files.write(file, sb.toString().getBytes(), option);
+            return true;
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Called whenever the window is resized to update the image sizes (only called by the Swing
+     * framework
+     *
+     * @param e - The event associated with the resizing
+     */
     @Override
     public void componentResized(ComponentEvent e) {
         refreshPics();
@@ -474,6 +554,66 @@ class Window implements ComponentListener {
 
     @Override
     public void componentHidden(ComponentEvent e) {
+
+    }
+
+    @Override
+    public void windowOpened(WindowEvent e) {
+
+    }
+
+    /**
+     * Called when the user/system closes the window. Writes settings to file. Note this may not
+     * always work perfectly (i.e. if the system crashes or the process receives a SIGKILL) but
+     * these are not high-stakes settings to be saved and aren't worth writing to file every time
+     * they change
+     *
+     * @param e - The WindowEvent associated with the close operation
+     */
+    @Override
+    public void windowClosing(WindowEvent e) {
+        StringBuilder sb = new StringBuilder();
+        // right now the only setting is where the file chooser should default to but this is
+        // future-proofed so should more settings be added, this will still work
+        for (String key : settings.keySet()) {
+            sb.append(key);
+            sb.append('='); // note all settings should be in the form key=value\n
+            sb.append(settings.get(key));
+            sb.append('\n');
+        }
+        try {
+            Files.write(preferences.toPath(), sb.toString().getBytes(),
+                    StandardOpenOption.TRUNCATE_EXISTING);
+        } catch (IOException error) {
+            Logger.getLogger(getClass().getName()).warning("IOException: could not write " +
+                    "preferences to file");
+        }
+        frame.dispose();
+        System.exit(0);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent e) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent e) {
 
     }
 
