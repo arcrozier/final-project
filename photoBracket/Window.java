@@ -283,7 +283,6 @@ class Window implements ComponentListener {
      * Helper method that executes when the user chooses the left picture
      */
     private void leftChosen() {
-        Logger.getLogger(getClass().getName()).info("Left chosen - not yet implemented");
         bracket.selected(images[0]);
         updatePanel();
     }
@@ -292,7 +291,6 @@ class Window implements ComponentListener {
      * Helper method that executes when the user chooses the right picture
      */
     private void rightChosen() {
-        Logger.getLogger(getClass().getName()).info("Right chosen - not yet implemented");
         bracket.selected(images[1]);
         updatePanel();
     }
@@ -301,7 +299,6 @@ class Window implements ComponentListener {
      * Helper method that executes when the user wants to choose both pictures
      */
     private void bothChosen() {
-        Logger.getLogger(getClass().getName()).info("Both chosen - not yet implemented");
         bracket.selected(images[0], images[1]);
         updatePanel();
     }
@@ -310,7 +307,6 @@ class Window implements ComponentListener {
      * Helper method to retrieve new pictures from the bracket
      */
     private void newPics() {
-        Logger.getLogger(getClass().getName()).info("Get new pics - not yet implemented");
         bracket.getNewFiles(images[0], images[1]);
         updatePanel();
     }
