@@ -79,6 +79,7 @@ public class Bracket {
         }
         if (currentRound.isEmpty() && delta) {
             currentRound = currentRound.winners;
+            delta = false;
         }
         return currentRound.getNextPair();
     }
