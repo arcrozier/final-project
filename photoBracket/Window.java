@@ -106,6 +106,7 @@ class Window implements ComponentListener {
         constraints.insets = new Insets(10, 50, 10, 50);
         frame.add(buttons, constraints);
         frame.setVisible(true);
+        frame.addComponentListener(this);
 
         favorites = new File(".favorites");
     }
