@@ -142,8 +142,12 @@ class Window implements ComponentListener {
      */
     private JPanel makePicPanel() {
         JPanel pictures = new JPanel();
+        pictures.setLayout(new GridBagLayout());
         leftPic = new JLabel();
         rightPic = new JLabel();
+
+        leftPic.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
+        rightPic.setBorder(BorderFactory.createLineBorder(Color.RED, 5));
 
         GridBagConstraints picsConstraints = new GridBagConstraints();
         picsConstraints.fill = GridBagConstraints.BOTH;
@@ -304,7 +308,7 @@ class Window implements ComponentListener {
      */
     private void newPics() {
         Logger.getLogger(getClass().getName()).info("Get new pics - not yet implemented");
-        bracket.selected(bracket.getNewFiles(images[0], images[1]));
+        images = bracket.getNewFiles(images[0], images[1]);
     }
 
     /**
