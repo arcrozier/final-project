@@ -43,13 +43,10 @@ public class Bracket {
      * @return - True if you can still get more images from this bracket, false otherwise
      */
     public boolean hasNextPair() {
-        if (currentRound.hasNextPair()) {
-            return true;
-        }
-        if (currentRound.isEmpty() && !delta) {
-            return false;
-        }
-        return !currentRound.isEmpty() && (currentRound.winners != null && !currentRound.winners.isEmpty());
+        return currentRound.hasNextPair() || (delta && (
+                (!currentRound.isEmpty() && currentRound.winners != null && !currentRound.winners.isEmpty()) ||
+                (currentRound.winners != null && currentRound.winners.hasNextPair()))
+        );
     }
 
     /**
@@ -64,7 +61,7 @@ public class Bracket {
     /**
      * Adds a list of files to the bracket
      *
-     * @param files - the one or more files to be added
+     * @param files - One or more files to be added
      */
     public void add(ImageFile... files) {
         for (ImageFile file : files) add(file);

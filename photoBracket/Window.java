@@ -117,6 +117,8 @@ class Window implements ComponentListener {
      * can update the photos directly)
      */
     private void refreshPics() {
+        System.out.println(bracket);
+        System.out.println(images);
         if (images[0] == null || images[1] == null) return;
         try {
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
