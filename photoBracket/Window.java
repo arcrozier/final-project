@@ -311,7 +311,7 @@ class Window implements ComponentListener {
      */
     private void newPics() {
         Logger.getLogger(getClass().getName()).info("Get new pics - not yet implemented");
-        images = bracket.getNewFiles(images[0], images[1]);
+        bracket.getNewFiles(images[0], images[1]);
         updatePanel();
     }
     
@@ -463,6 +463,7 @@ class Window implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
+        System.out.println("Resized");
         refreshPics();
     }
 

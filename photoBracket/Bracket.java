@@ -102,13 +102,11 @@ public class Bracket {
      * Restores the state of the current round and gets two new images
      *
      * @param files - The files that were not to be compared
-     * @return - Two new files (or the same files, if the round is basically empty)
      */
-    public ImageFile[] getNewFiles(ImageFile... files) {
+    public void getNewFiles(ImageFile... files) {
         for (ImageFile file : files) {
             currentRound.add(file);
         }
-        return getNextPair();
     }
 
     @Override
