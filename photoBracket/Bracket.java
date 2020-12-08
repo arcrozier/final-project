@@ -5,7 +5,7 @@ import java.util.*;
 public class Bracket {
 
     private Round currentRound;
-    private int delta;
+    private boolean delta;
 
     /**
      * Initializes a bracket with the given files
@@ -14,7 +14,7 @@ public class Bracket {
      */
     public Bracket(ImageFile[] files) {
         currentRound = new Round(files);
-        delta = 0;
+        delta = false;
     }
 
     /**
@@ -46,7 +46,7 @@ public class Bracket {
         if (currentRound.hasNextPair()) {
             return true;
         }
-        if (currentRound.isEmpty() && delta == 0) { 
+        if (currentRound.isEmpty() && !delta) {
             return false;
         }
         return !currentRound.isEmpty() && (currentRound.winners != null && !currentRound.winners.isEmpty());
@@ -78,9 +78,9 @@ public class Bracket {
      */
     public ImageFile[] getNextPair() {
         if (!currentRound.winners.isEmpty() && !currentRound.isEmpty() && !currentRound.hasNextPair()) {
-            // move last item in current to winners
+            currentRound.winners.add(currentRound.getNextImage());
         }
-        if (!currentRound.isEmpty() && delta > 0) {
+        if (!currentRound.isEmpty() && delta) {
             currentRound = currentRound.winners;
         }
         return currentRound.getNextPair();
@@ -92,7 +92,7 @@ public class Bracket {
      * @param files - The file(s) selected by the user
      */
     public void selected(ImageFile... files) {
-        if (files.length != 2) delta++;
+        if (files.length != 2) delta = true;
         for (ImageFile file : files) {
             currentRound.winners.add(file);
         }
@@ -172,6 +172,13 @@ public class Bracket {
             pair[0] = files.remove(0);
             pair[1] = files.remove(files.size() - 1);
             return pair;
+        }
+
+        public ImageFile getNextImage() {
+            if (!files.isEmpty()) {
+                return files.remove(0);
+            }
+            return null;
         }
 
         /**
