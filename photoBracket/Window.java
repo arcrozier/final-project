@@ -117,9 +117,7 @@ class Window implements ComponentListener {
      * can update the photos directly)
      */
     private void refreshPics() {
-        System.out.println("Refreshing: " + images[0] + " and " + images[1]);
         if (images[0] == null || images[1] == null) return;
-        System.out.println(leftPic.getSize() + ", " + rightPic.getSize());
         try {
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
         } catch (IOException e) {
@@ -335,7 +333,6 @@ class Window implements ComponentListener {
      */
     void populate(Bracket bracket) {
         this.bracket = bracket;
-        System.out.println(bracket + " " + bracket.hasNextPair());
         if (bracket.hasNextPair()) {
             images = bracket.getNextPair();
             contentLayout.show(contentPanel, PIC_PANEL);
@@ -464,7 +461,6 @@ class Window implements ComponentListener {
 
     @Override
     public void componentResized(ComponentEvent e) {
-        System.out.println("Resized");
         refreshPics();
     }
 
