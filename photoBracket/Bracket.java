@@ -77,7 +77,7 @@ public class Bracket {
         if (!currentRound.winners.isEmpty() && !currentRound.isEmpty() && !currentRound.hasNextPair()) {
             currentRound.winners.add(currentRound.getNextImage());
         }
-        if (!currentRound.isEmpty() && delta) {
+        if (currentRound.isEmpty() && delta) {
             currentRound = currentRound.winners;
         }
         return currentRound.getNextPair();
