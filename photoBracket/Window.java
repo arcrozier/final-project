@@ -37,6 +37,7 @@ class Window implements ComponentListener, WindowListener {
     private static final String PROMPT_PANEL = "prompt";
     private static final String PIC_PANEL = "pics";
     private static final String PREFERENCE_DEFAULT_DIR = "default directory";
+    private static final int ANIMATION_DELAY = 500;
 
     /**
      * Initialize and show a new GUI window
@@ -79,7 +80,12 @@ class Window implements ComponentListener, WindowListener {
 
         JMenuBar menuBar = new JMenuBar();
         JMenu fileMenu = new JMenu("File");
-        JMenuItem select = new JMenuItem("Select new photos");
+        JMenuItem select = new JMenuItem("Select more photos");
+        JMenuItem replace = new JMenuItem("Sort new photos");
+        replace.addActionListener(e -> {
+            setBracket(new Bracket());
+            chooseFiles();
+        });
         select.addActionListener(e -> chooseFiles());
         fileMenu.add(select);
 
@@ -143,8 +149,11 @@ class Window implements ComponentListener, WindowListener {
     private void refreshPics() {
         if (images[0] == null || images[1] == null) return;
         int which = 0;
+        Dimension panelSize = leftPic.getParent().getSize();
+        Dimension maxSize = new Dimension(panelSize.width / 2, panelSize.height);
         try {
-            leftPic.setMaximumSize(new Dimension(frame.getWidth() / 2, frame.getHeight()));
+            leftPic.setPreferredSize(maxSize);
+            System.out.println(leftPic.getSize() + " " + maxSize);
             leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
             which += 1;
         } catch (IOException | NullPointerException e) {
@@ -152,7 +161,8 @@ class Window implements ComponentListener, WindowListener {
                     "occurred while loading left image: " + images[0].toString());
         }
         try {
-            rightPic.setMaximumSize(new Dimension(frame.getWidth() / 2, frame.getHeight()));
+            rightPic.setPreferredSize(maxSize);
+            System.out.println(rightPic.getSize() + " " + maxSize);
             rightPic.setIcon(images[1].getIcon(rightPic.getSize()));
             which += 2;
         } catch (IOException | NullPointerException e) {
@@ -180,19 +190,18 @@ class Window implements ComponentListener, WindowListener {
      */
     private JPanel makePicPanel() {
         JPanel pictures = new JPanel();
-        pictures.setLayout(new GridBagLayout());
+        SpringLayout layout = new SpringLayout();
+        pictures.setLayout(layout);
         leftPic = new JLabel();
         rightPic = new JLabel();
 
-        GridBagConstraints picsConstraints = new GridBagConstraints();
-        picsConstraints.fill = GridBagConstraints.BOTH;
-        picsConstraints.weighty = 1;
-        picsConstraints.weightx = 1;
-        picsConstraints.gridy = 0;
-        picsConstraints.gridx = 0;
-        pictures.add(leftPic, picsConstraints);
-        picsConstraints.gridx = 1;
-        pictures.add(rightPic, picsConstraints);
+        leftPic.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
+        rightPic.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
+
+        pictures.add(leftPic);
+        pictures.add(rightPic);
+
+        SpringUtilities.makeGrid(pictures, 1, 2, 5, 5, 5, 5);
 
         return pictures;
     }
@@ -370,6 +379,8 @@ class Window implements ComponentListener, WindowListener {
      * Populates the window with the next two pictures pulled from the bracket (useful when
      * initializing the window)
      * Updates the bracket at the same time
+     *
+     * @param bracket - The bracket this Window should use
      */
     void populate(Bracket bracket) {
         this.bracket = bracket;
@@ -385,11 +396,13 @@ class Window implements ComponentListener, WindowListener {
     }
 
     /**
-     * Sets the bracket for this Window (alias for populate(Bracket bracket))
+     * Sets the bracket for this Window and clears current images
      *
      * @param bracket - The bracket to use for choosing files
      */
     void setBracket(Bracket bracket) {
+        images[0] = null;
+        images[1] = null;
         populate(bracket);
     }
 
