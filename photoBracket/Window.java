@@ -38,6 +38,8 @@ class Window implements ComponentListener, WindowListener {
     private static final String PIC_PANEL = "pics";
     private static final String PREFERENCE_DEFAULT_DIR = "default directory";
     private static final int ANIMATION_DELAY = 500;
+    private static final int PAD = 5;
+    private static final Color SELECTED_COLOR = new Color(47, 191, 41);
 
     /**
      * Initialize and show a new GUI window
@@ -82,12 +84,10 @@ class Window implements ComponentListener, WindowListener {
         JMenu fileMenu = new JMenu("File");
         JMenuItem select = new JMenuItem("Select more photos");
         JMenuItem replace = new JMenuItem("Sort new photos");
-        replace.addActionListener(e -> {
-            setBracket(new Bracket());
-            chooseFiles();
-        });
-        select.addActionListener(e -> chooseFiles());
+        replace.addActionListener(e -> chooseFiles(true));
+        select.addActionListener(e -> chooseFiles(false));
         fileMenu.add(select);
+        fileMenu.add(replace);
 
         fileMenu.addSeparator();
 
@@ -150,20 +150,20 @@ class Window implements ComponentListener, WindowListener {
         if (images[0] == null || images[1] == null) return;
         int which = 0;
         Dimension panelSize = leftPic.getParent().getSize();
-        Dimension maxSize = new Dimension(panelSize.width / 2, panelSize.height);
+        Dimension maxSize = new Dimension((int) (panelSize.width / 2 - PAD * 1.5),
+                (int) (panelSize.height - PAD * 1.5));
+        leftPic.setPreferredSize(maxSize);
+        rightPic.setPreferredSize(maxSize);
+
         try {
-            leftPic.setPreferredSize(maxSize);
-            System.out.println(leftPic.getSize() + " " + maxSize);
-            leftPic.setIcon(images[0].getIcon(leftPic.getSize()));
+            leftPic.setIcon(images[0].getIcon(maxSize));
             which += 1;
         } catch (IOException | NullPointerException e) {
             Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
                     "occurred while loading left image: " + images[0].toString());
         }
         try {
-            rightPic.setPreferredSize(maxSize);
-            System.out.println(rightPic.getSize() + " " + maxSize);
-            rightPic.setIcon(images[1].getIcon(rightPic.getSize()));
+            rightPic.setIcon(images[1].getIcon(maxSize));
             which += 2;
         } catch (IOException | NullPointerException e) {
             Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
@@ -195,13 +195,10 @@ class Window implements ComponentListener, WindowListener {
         leftPic = new JLabel();
         rightPic = new JLabel();
 
-        leftPic.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
-        rightPic.setBorder(BorderFactory.createLineBorder(Color.RED, 10));
-
         pictures.add(leftPic);
         pictures.add(rightPic);
 
-        SpringUtilities.makeGrid(pictures, 1, 2, 5, 5, 5, 5);
+        SpringUtilities.makeGrid(pictures, 1, 2, PAD, PAD, PAD, PAD);
 
         return pictures;
     }
@@ -225,7 +222,7 @@ class Window implements ComponentListener, WindowListener {
         files.setFont(new Font(null, Font.BOLD, 24));
         files.setBackground(new Color(53, 62, 208));
         files.setAlignmentX(Component.CENTER_ALIGNMENT);
-        files.addActionListener(e -> chooseFiles());
+        files.addActionListener(e -> chooseFiles(false));
 
         prompt.add(Box.createVerticalGlue());
         prompt.add(info);
@@ -255,11 +252,17 @@ class Window implements ComponentListener, WindowListener {
 
     /**
      * Helper method that gets files from the user
+     *
+     * @param reset - Whether to clear the current images in order to display the new ones
      */
-    private void chooseFiles() {
+    private void chooseFiles(boolean reset) {
         int result = fileChooser.showOpenDialog(frame);
         settings.put(PREFERENCE_DEFAULT_DIR, fileChooser.getCurrentDirectory().getPath());
         if (result == JFileChooser.APPROVE_OPTION) {
+            if (reset) {
+                images[0] = images[1] = null;
+                setBracket(new Bracket());
+            }
             bracket.add(ImageFile.toImageFiles(fileChooser.getSelectedFiles()));
         }
         if (images[0] == null || images[1] == null) populate(bracket);
@@ -282,19 +285,19 @@ class Window implements ComponentListener, WindowListener {
         actionMap.put(KEY_LEFT, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                leftChosen();
+                animateLeft();
             }
         });
         actionMap.put(KEY_RIGHT, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                rightChosen();
+                animateRight();
             }
         });
         actionMap.put(KEY_UP, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                bothChosen();
+                animateBoth();
             }
         });
         actionMap.put(KEY_DOWN, new AbstractAction() {
@@ -314,9 +317,9 @@ class Window implements ComponentListener, WindowListener {
         JButton both = new JButton("Both");
         JButton neither = new JButton("Different pics");
 
-        left.addActionListener(e -> leftChosen());
-        right.addActionListener(e -> rightChosen());
-        both.addActionListener(e -> bothChosen());
+        left.addActionListener(e -> animateLeft());
+        right.addActionListener(e -> animateRight());
+        both.addActionListener(e -> animateBoth());
         neither.addActionListener(e -> newPics());
 
         buttons.add(left, buttonConstraints);
@@ -328,7 +331,50 @@ class Window implements ComponentListener, WindowListener {
         buttons.add(right, buttonConstraints);
         buttonConstraints.gridx += 1;
 
+        buttons.setBorder(BorderFactory.createEtchedBorder());
+
         return buttons;
+    }
+
+    /**
+     * Helper method that chooses the left picture and shows an animation
+     */
+    private void animateLeft() {
+        Timer timer = new Timer(ANIMATION_DELAY, e1 -> {
+            leftPic.setBorder(null);
+            leftChosen();
+        });
+        timer.setRepeats(false);
+        timer.start();
+        leftPic.setBorder(BorderFactory.createLineBorder(SELECTED_COLOR, 5));
+    }
+
+    /**
+     * Helper method that chooses the right picture and shows an animation
+     */
+    private void animateRight() {
+        Timer timer = new Timer(ANIMATION_DELAY, e1 -> {
+            rightPic.setBorder(null);
+            rightChosen();
+        });
+        timer.setRepeats(false);
+        timer.start();
+        rightPic.setBorder(BorderFactory.createLineBorder(SELECTED_COLOR, 5));
+    }
+
+    /**
+     * Helper method that chooses both and shows an animation
+     */
+    private void animateBoth() {
+        Timer timer = new Timer(ANIMATION_DELAY, e1 -> {
+            leftPic.setBorder(null);
+            rightPic.setBorder(null);
+            bothChosen();
+        });
+        timer.setRepeats(false);
+        timer.start();
+        leftPic.setBorder(BorderFactory.createLineBorder(SELECTED_COLOR, 5));
+        rightPic.setBorder(BorderFactory.createLineBorder(SELECTED_COLOR, 5));
     }
 
     /**
@@ -396,14 +442,12 @@ class Window implements ComponentListener, WindowListener {
     }
 
     /**
-     * Sets the bracket for this Window and clears current images
+     * Sets the bracket for this Window
      *
      * @param bracket - The bracket to use for choosing files
      */
     void setBracket(Bracket bracket) {
-        images[0] = null;
-        images[1] = null;
-        populate(bracket);
+        this.bracket = bracket;
     }
 
     /**
