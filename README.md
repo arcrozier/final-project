@@ -12,7 +12,6 @@ This is a high-level overview of how this project is structured and guide as to 
         * [Round](#round)
             * [RoundAction](#roundaction)
     * [ImageFile](#imagefile)
-* [TODOs](#todos)
 
 ## Classes
 
@@ -57,9 +56,3 @@ This is a File with some extra methods for being an image. It has the ability to
 ` objects into `ImageFile`s (both arrays and single files). It also a method that reads in the
  contents of an image and returns an appropriately sized version that can be displayed in the
   [`Window`](#window).
-
-## TODOs
-
-* Photos are not shown based on similarity but rather by how far apart they are from each other
- in the order that they're picked  
-* There are outlines of an undo/redo system but they aren't implemented in any meaningful way

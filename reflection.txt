@@ -1,3 +1,13 @@
-We gained a lot of knowledge from this project. First and foremost, we experiences the challenges of code collaboration first-hand. There were a few occasions in which a team member needed to utilize a a portion of the other's code but was unsure of where to find this code. This taught us the importance of communication and thorough commenting. In relation to the coding itself, we learned about swing and implementing an interactive user interface. 
+We gained a lot of knowledge from this project. First and foremost, we experienced the challenges of
+code collaboration first-hand. There were a few occasions in which a team member needed to utilize
+a portion of the other's code but was unsure of where to find this code. This taught us the
+importance of communication and thorough commenting. In relation to the coding itself, we learned
+about swing and implementing an interactive user interface.
 
-Overall, this project as a whole was an enjoyable experience. Being able to work with someone to create an idea and actually coming together and creating a functioning product was really exciting and rewarding. While fun, there were a few pain points during the development process. It was frustrating to debug our code. After our app was working and intractable, we struggled to pinpoint the exact location of a few bugs which proved to be time consuming and mentally draining. However, we were able to preserver and complete the product we were happy with. We found that working with a partner and exploring/learning existing packages was extremely beneficial to our learning. 
+Overall, this project as a whole was an enjoyable experience. Being able to work with someone to
+create an idea and actually coming together and creating a functioning product was really exciting
+and rewarding. While fun, there were a few pain points during the development process. It was
+frustrating to debug our code. After our app was working and intractable, we struggled to pinpoint
+the exact location of a few bugs which proved to be time consuming and mentally draining. However,
+we were able to preserver and complete the product we were happy with. We found that working with a
+partner and exploring/learning existing packages was extremely beneficial to our learning.
