@@ -17,16 +17,15 @@ This is a high-level overview of how the project is currently structured (obviou
 ## Classes
 
 ### Main
-This is the entry point for the program and is pretty unimportant beyond that to be honest
+This is the entry point for the program. Compile and run this file to use the PhotoBracket app.
 
 ### Window
 This is the class that handles all GUI-related tasks. This creates the window, responds to user
- input and handles keystrokes. It displays the images and interacts with the [`Bracket`](#bracket) but
-  purely
-  represents the GUI.
-  
+ input and handles keystrokes. It displays the images and interacts with the [`Bracket`](#bracket)
+ but purely represents the GUI.
+
   As soon as an image is rejected by the user, the file gets de-referenced and garbage collected.
-  
+
 #### ImageFilter
 This is a helper class within `Window` that just sorts images from everything else when the user is
  selecting files to add to the bracket
@@ -37,7 +36,7 @@ This is the real backend and where all the intelligence is supposed to go. Curre
   corresponding round of winners. Each time the `Bracket` runs out of pictures for the current
    `Round` it advances the current round to its winner, like how one recursively accesses a tree
     node's left and right subtrees.
-    
+
 It does not keep references to any images, instead handing them directly from the current
      `Round` to the Window
 
@@ -47,7 +46,7 @@ This is pretty much just a List but with some extra methods. It contains all the
  are currently being considered. It then has a few helper methods that check if the round is
   empty and retrieve a pair of photos to show to the user. It attempts to be memory efficient by
    immediately dropping references to images as soon as its Bracket requests them.
-   
+
 ##### RoundAction
 This is not implemented but contains the bare bones of what could eventually be constructed into
  a real undo/redo system. This essentially tracks what has been modified and how so that it can
@@ -59,13 +58,10 @@ This is a File with some extra methods for being an image. It has the ability to
 ` objects into `ImageFile`s (both arrays and single files). It also a method that reads in the
  contents of an image and returns an appropriately sized version that can be displayed in the
   [`Window`](#window)
-  
+
 
 ## TODOs
 
-* Currently not tested at all
-* "Selecting" photos does nothing
 * Photos are not shown based on similarity but rather by how far apart they are from each other
- in the order that they're picked
-* Currently nothing happens when the user finishes selecting photos  
+ in the order that they're picked  
 * There are outlines of an undo/redo system but they aren't implemented in any meaningful way
