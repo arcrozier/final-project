@@ -1,6 +1,7 @@
 # Photo Bracket
 
-This is a high-level overview of how the project is currently structured
+This is a high-level overview of how this project is structured and guide as to how to
+ use PhotoBracket app.
 
 ## Contents:
 * [Classes](#classes)
@@ -55,7 +56,7 @@ This is not implemented but contains the bare bones of what could eventually be 
 This is a File with some extra methods for being an image. It has the ability to convert `File
 ` objects into `ImageFile`s (both arrays and single files). It also a method that reads in the
  contents of an image and returns an appropriately sized version that can be displayed in the
-  [`Window`](#window)
+  [`Window`](#window).
 
 ## TODOs
 
