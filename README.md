@@ -45,13 +45,14 @@ Sorting begins with the program displaying two random images uploaded by the use
     different images. This action will not eliminate the images, but will add them back to the list
      of images for the current round and present them later to be compared to different images.
 
-   This process continues until the user no longer wants to compare images. If the user only has
-    one image remaining or has indicated liking all remaining images (by failing to eliminate
-     them), they will be notified of their options by a popup window. This will ask the user to
-      either save the images to favorites or to continue sorting.
-      * **Save favorites** will add all remaining images to the favorites folder that may be later
-       exported to the user's computer
-      * **Continue sorting** will allow the users to eliminate more photos and/or upload new images
+   As a quick feedback message, a green box will appear around the chosen images. The sorting
+    process continues until the user no longer wants to compare images. If the user only has
+     one image remaining or has indicated liking all remaining images (by failing to eliminate
+      them), they will be notified of their options by a popup window. This will ask the user to
+       either save the images to favorites or to continue sorting.
+       * **Save favorites** adds all remaining images to the favorites folder that may be later
+        exported to the user's computer
+       * **Continue sorting** allows the users to eliminate more photos and/or upload new images
 
 ### File_Dropdown
 

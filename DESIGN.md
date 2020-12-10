@@ -41,7 +41,9 @@ It does not keep references to any images, instead handing them directly from th
 `Round` to the Window.
 
 This was done to maximize efficiency and simplicity. Because of this structure, the amount of
-code needed was minimized and the program runs more quickly this way.
+code needed was minimized and the program runs more quickly this way. The structure of `Bracket`
+was decided upon due to its resemblance to a competition bracket. Users go through all uploaded
+images before advancing onto the a round of winners in order to eliminate the worst photos in the beginning
 
 ### Round
 This is essentially just a List with some additional methods. It contains all the [`ImageFile
@@ -51,9 +53,7 @@ empty and retrieve a pair of photos to show to the user. It attempts to be memor
 immediately dropping references to images as soon as its Bracket requests them.
 
 This approach was chosen because it seemed to be the simplest way to store images. Lists allow
-the program to easily add and access images. The structure of `Round` was decided upon due to
-its resemblance to a competition bracket. Users go through all uploaded images before advancing
-onto the a round of winners in order to eliminate the worst photos in the beginning.
+the program to easily add and access images.
 
 #### RoundAction
 This is not implemented but contains the bare bones of what could eventually be constructed into
@@ -67,4 +67,4 @@ contents of an image and returns an appropriately sized version that can be disp
 [`Window`](#window).
 
 This approach was selected in order to standardize the files uploaded by the users to allow the
-rest of the program to easily handle the images. 
+rest of the program to easily handle the images.
