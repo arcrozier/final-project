@@ -26,7 +26,7 @@ save the remaining images to a folder on their computer, upload more photos to c
 exit the app.
 
 ## Introductory Video
-Click [here]() for a 5-minute video that walks through this app.
+Click [here]() for a 5 minute video that walks through this app.
 
 ## Using Photo Bracket
 
@@ -50,11 +50,13 @@ select:
 different images. This action will not eliminate the images, but will add them back to the list
 of images for the current round and present them later to be compared to different images.
 
-As a quick feedback message, a green box will appear around the chosen images. The sorting
-process continues until the user no longer wants to compare images. If the user only has
-one image remaining or has indicated liking all remaining images (by failing to eliminate
-them), they will be notified of their options by a popup window. This will ask the user to
-either save the images to favorites or to continue sorting.
+As a quick feedback message, a green box will appear around the chosen images. The user will be
+asked to sort through all uploaded images as the first round. Subsequent rounds will ask the user
+to compare only the chosen photos/winners from the previous round. This sorting process continues
+until the user no longer can/want to compare images. If the user only has one image remaining or
+has indicated liking all remaining images (by failing to eliminate them), they will be notified of
+their options by a popup window. This will ask the user to either save the image(s) to favorites or
+continue sorting.
 * **Save favorites** adds all remaining images to their personal favorites list that may be later
 exported to the user's computer
 * **Continue sorting** allows the users to eliminate more photos and/or upload new images
