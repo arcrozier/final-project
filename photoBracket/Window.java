@@ -213,8 +213,8 @@ class Window implements ComponentListener, WindowListener {
 
         prompt.setLayout(new BoxLayout(prompt, BoxLayout.Y_AXIS));
 
-        JLabel info = new JLabel("Looks like you don't have enough photos yet. We recommend choosing at leaast two." +
-                "select some?");
+        JLabel info = new JLabel("Looks like you don't have enough photos yet. We recommend " +
+                "choosing at least two.");
         info.setFont(new Font(null, Font.BOLD, 24));
         info.setAlignmentX(Component.CENTER_ALIGNMENT);
 
