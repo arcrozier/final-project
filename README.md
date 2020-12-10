@@ -5,15 +5,15 @@ This is a high-level overview of how this project is structured and guide as to 
 
 ## Contents:
 * [Overview](#overview)
-* [Using Photo Bracket](#using photo bracket)
-    * [Getting Started](#getting started)
-    * [Comparing Images ](#comparing images)
-    * [File Dropdown](#file dropdown)
-      * [Saving Images](#saving images)
-      * [Selecting More Photos](#selecting more photos)
-      * [Sort New Photos](#sort new photos)
-      * [Clear Favorites](#clear favorites)
-* [Test Images](#test images)
+* [Using_Photo_Bracket](#using_photo_bracket)
+    * [Getting_Started](#getting_started)
+    * [Comparing_Images](#comparing_images)
+    * [File_Dropdown](#file_dropdown)
+      * [Saving_Images](#saving_images)
+      * [Selecting_More_Photos](#selecting_more_photos)
+      * [Sort_New_Photos](#sort_new_photos)
+      * [Clear_Favorites](#clear_favorites)
+* [Test_Images](#test_images)
 
 ## Overview
 PhotoBracket is an application that allows users to upload and sort through images. The home screen
@@ -24,16 +24,16 @@ PhotoBracket is an application that allows users to upload and sort through imag
      save the remaining images to a folder on their computer, upload more photos to sort, or exit
       the application.
 
-## Using Photo Bracket
+## Using_Photo_Bracket
 
-### Getting Started
+### Getting_Started
 To being, compile and run Main. From there, a separate window will appear where users can interact
  with the app. First, the "Find files" button is to be clicked. This will prompt the user to select
  images from their computer. The users will only be allowed to chose jpeg, jpg, or png files. The
   sorting will not begin until at least two photos have been uploaded. Once this condition is met,
    the program will automatically being the sorting process.
 
-### Comparing Images
+### Comparing_Images
 Sorting begins with the program displaying two randomly selected images at a time. At this point,
  the user has four options. They must select one of the four buttons found at the bottom of the
   window. These buttons are "Left," "Both," "Different Pics," and "Right." The user should select
@@ -47,36 +47,36 @@ Sorting begins with the program displaying two randomly selected images at a tim
           failing to eliminate any of them), they will be notified of this by a popup window. The
            user will then be asked to save the images or to continue sorting.
 
-### File Dropdown
+### File_Dropdown
 
-#### Saving Images
+#### Saving_Images
 To save all remaining images, the user should select the "File" dropdown in the upper lefthand
  corner. Next, they should select "Export favorites." This will prompt the user to either save
   the images to a existing folder on their
    computer or to create a new folder to save the images to.
 
-#### Selecting More Photos
+#### Selecting_More_Photos
 At any time, the user can click on the "File" dropdown and select "Select more photos" to add
  photos to the current
   round they are in to be sorting with the remaining images.
 
-#### Sort New Photos
+#### Sort_New_Photos
 At any time, the user can click on the "File" dropdown and select "Sort new photos" to eliminate
  all remaining photos
   and select new ones from their computer.
 
-#### Clear Favorites
+#### Clear_Favorites
 At any time, the user can click on the "File" dropdown and select "Clear favorites" to empty the
  images currently stored
   in favorites.
 
-## Test Images
+## Test_Images
 If you would like, below are sample images that you may use download to upload into the app when
  testing. We highly recommend at least viewing
   at the images :)
 * [Adorable dog 1](https://cf.ltkcdn.net/dogs/images/orig/206270-1600x1067-Christmas-puppy.jpg)
-* [Adorable dog 2](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.walmart.com%2Fip%2FAvanti-Press-Lab-Puppies-In-Red-Truck-Box-of-10-Dog-Christmas-Cards%2F587496262&psig=AOvVaw1TVqdyNnd0ttS_CJHeEgl8&ust=1607661032551000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIihp5nKwu0CFQAAAAAdAAAAABAL)
-* [Adorable dog 3](https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.dogtime.com%2Fassets%2Fuploads%2F2017%2F12%2Fchristmas-safety-tips-dogs-2-1280x720.jpg&imgrefurl=https%3A%2F%2Fdogtime.com%2Fhow-to%2Fpet-safety%2F16897-pet-safety-tips-for-christmas&tbnid=YYO7W_ZmIR4MoM&vet=12ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygDegUIARCBAw..i&docid=7n1pcf1Wu6fA_M&w=1280&h=720&itg=1&q=christmas%20dogs&client=safari&ved=2ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygDegUIARCBAw)
-* [Adorable dog 4](https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.rover.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F12%2Fchristmas-pitbull-668x540.jpg&imgrefurl=https%3A%2F%2Fwww.rover.com%2Fblog%2Ftruth-about-christmas-dogs%2F&tbnid=W096quVDa4KuJM&vet=12ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygKegUIARCPAw..i&docid=WatDv2M1w8a75M&w=668&h=540&q=christmas%20dogs&client=safari&ved=2ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygKegUIARCPAw)
-* [Adorable dog 5](https://www.google.com/imgres?imgurl=https%3A%2F%2Fcuriocity.com%2Ftoronto%2Fwp-content%2Fuploads%2F2020%2F11%2Fxmasdog.jpg&imgrefurl=https%3A%2F%2Fcuriocity.com%2Ftoronto%2Flifestyle%2Fthe-worlds-first-ever-christmas-song-made-specifically-for-dogs-has-been-released%2F&tbnid=kvvPONr4X8fZ_M&vet=12ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMyggegUIARCLBA..i&docid=wLWKe5Zggx5esM&w=1500&h=1000&q=christmas%20dogs&client=safari&ved=2ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMyggegUIARCLBA)
-* [Adorable dog 6](https://www.google.com/imgres?imgurl=http%3A%2F%2Fgrandhavenpetresort.com.au%2Fwp-content%2Fuploads%2FDogs-Puppy-cats-Animals-Christmas-Photos-Images.jpg&imgrefurl=http%3A%2F%2Fgrandhavenpetresort.com.au%2Fchristmas%2F&tbnid=7FYNKEuxUUT6iM&vet=12ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygpegUIARCdBA..i&docid=oMJGdRxRC7_wWM&w=1366&h=1000&q=christmas%20dogs&client=safari&ved=2ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygpegUIARCdBA)
+* [Adorable dog 2](https://i5.walmartimages.com/asr/83977e3f-18bc-4239-8ec3-dcbf2f4b222d_1.0ed5daec862d4564bf7fd4334ff88bb2.jpeg)
+* [Adorable dog 3](https://dogtime.com/assets/uploads/2017/12/christmas-safety-tips-dogs-2-1280x720.jpg)
+* [Adorable dog 4](https://www.rover.com/blog/wp-content/uploads/2016/12/christmas-pitbull-668x540.jpg)
+* [Adorable dog 5](https://curiocity.com/toronto/wp-content/uploads/2020/11/xmasdog.jpg)
+* [Adorable dog 6](https://grandhavenpetresort.com.au/wp-content/uploads/Dogs-Puppy-cats-Animals-Christmas-Photos-Images.jpg)
