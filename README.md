@@ -45,10 +45,10 @@ Sorting begins with the program displaying two randomly selected images at a tim
        back to the list of images for the current round and present them to be compared later to
         different images.
 
-        This process continues until the user no longer wants to sort images. If
-         the user is down to one image left or has indicated liking all remaining images (by
-          failing to eliminate any of them), they will be notified of this by a popup window. The
-           user will then be asked to save the images or to continue sorting.
+   This process continues until the user no longer wants to sort images. If
+    the user is down to one image left or has indicated liking all remaining images (by
+     failing to eliminate any of them), they will be notified of this by a popup window. The
+      user will then be asked to save the images or to continue sorting.
 
 ### File_Dropdown
 
