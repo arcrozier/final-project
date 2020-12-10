@@ -5,6 +5,7 @@ This is a high-level overview of how this project is structured and guide as to 
 
 ## Contents:
 * [Overview](#overview)
+* [Introductory_Video](#introductory_video)
 * [Using_Photo_Bracket](#using_photo_bracket)
     * [Getting_Started](#getting_started)
     * [Comparing_Images](#comparing_images)
@@ -23,6 +24,9 @@ PhotoBracket is an application that allows users to upload and sort through imag
     until the user is satisfied with all remaining photos. At this point, the user can chose to
      save the remaining images to a folder on their computer, upload more photos to compare, or
       exit the app.
+
+## Introductory_Video
+Click [here]() for a 5 minute video that walks through this app.
 
 ## Using_Photo_Bracket
 
