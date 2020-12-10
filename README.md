@@ -74,7 +74,7 @@ At any time, the user can click on the "File" dropdown and select "Clear favorit
 If you would like, below are sample images that you may use download to upload into the app when
  testing. We highly recommend at least viewing
   at the images :)
-* [Adorable dog 1](https://www.google.com/url?sa=i&url=https%3A%2F%2Fdogs.lovetoknow.com%2Fwiki%2FA_Puppy_at_Christmas_Time&psig=AOvVaw1TVqdyNnd0ttS_CJHeEgl8&ust=1607661032551000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIihp5nKwu0CFQAAAAAdAAAAABAF)
+* [Adorable dog 1](https://cf.ltkcdn.net/dogs/images/orig/206270-1600x1067-Christmas-puppy.jpg)
 * [Adorable dog 2](https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.walmart.com%2Fip%2FAvanti-Press-Lab-Puppies-In-Red-Truck-Box-of-10-Dog-Christmas-Cards%2F587496262&psig=AOvVaw1TVqdyNnd0ttS_CJHeEgl8&ust=1607661032551000&source=images&cd=vfe&ved=0CAIQjRxqFwoTCIihp5nKwu0CFQAAAAAdAAAAABAL)
 * [Adorable dog 3](https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.dogtime.com%2Fassets%2Fuploads%2F2017%2F12%2Fchristmas-safety-tips-dogs-2-1280x720.jpg&imgrefurl=https%3A%2F%2Fdogtime.com%2Fhow-to%2Fpet-safety%2F16897-pet-safety-tips-for-christmas&tbnid=YYO7W_ZmIR4MoM&vet=12ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygDegUIARCBAw..i&docid=7n1pcf1Wu6fA_M&w=1280&h=720&itg=1&q=christmas%20dogs&client=safari&ved=2ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygDegUIARCBAw)
 * [Adorable dog 4](https://www.google.com/imgres?imgurl=https%3A%2F%2Fwww.rover.com%2Fblog%2Fwp-content%2Fuploads%2F2016%2F12%2Fchristmas-pitbull-668x540.jpg&imgrefurl=https%3A%2F%2Fwww.rover.com%2Fblog%2Ftruth-about-christmas-dogs%2F&tbnid=W096quVDa4KuJM&vet=12ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygKegUIARCPAw..i&docid=WatDv2M1w8a75M&w=668&h=540&q=christmas%20dogs&client=safari&ved=2ahUKEwinqbGXysLtAhWKkZ4KHe6eA9QQMygKegUIARCPAw)
