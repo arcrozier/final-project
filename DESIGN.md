@@ -115,3 +115,8 @@ window and are adjusted along with the window itself.
 
 This approach was selected in order to standardize the files uploaded by the users to allow the
 rest of the program to easily handle the images.
+
+## SpringUtilities
+This is a utility class provided by Oracle for use with the `SpringLayout` in Swing. It is used to 
+make building the picture panel slightly easier since the code was already written and was 
+referenced in a tutorial by Oracle on using the `SpringLayout`.
