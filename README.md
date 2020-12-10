@@ -37,12 +37,15 @@ To being, compile and run Main. From there, a separate window will appear where 
 Sorting begins with the program displaying two randomly selected images at a time. At this point,
  the user has four options. They must select one of the four buttons found at the bottom of the
   window. These buttons are **Left**, **Both**, **Different Pics**, and **Right**. The user should select
-   **Left** if they prefer the image on the left side of the screen, **Right** if they prefer the image
-    on the right side of the window, **Both** if they want both images to advance to the next round,
-     or **Different pics** if they would like to keep not compare these images and would like to
+   * **Left** if they prefer the image on the left side of the screen;
+   * **Right** if they prefer the image on the right side of the window;
+   * **Both** if they want both images to advance to the next round or;
+   * **Different pics** if they would like to keep not compare these images and would like to
       compare different images. This action will not eliminate the images, it will instead add them
        back to the list of images for the current round and present them to be compared later to
-        different images. This process continues until the user no longer wants to sort images. If
+        different images.
+
+        This process continues until the user no longer wants to sort images. If
          the user is down to one image left or has indicated liking all remaining images (by
           failing to eliminate any of them), they will be notified of this by a popup window. The
            user will then be asked to save the images or to continue sorting.
