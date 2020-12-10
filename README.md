@@ -1,85 +1,85 @@
 # Photo Bracket User Guide
 
 This is a high-level overview of how this project is structured and guide as to how to
- use the Photo Bracket app.
+use the Photo Bracket app.
 
 ## Contents:
 * [Overview](#overview)
-* [Introductory_Video](#introductory_video)
-* [Using_Photo_Bracket](#using_photo_bracket)
-    * [Getting_Started](#getting_started)
-    * [Comparing_Images](#comparing_images)
-    * [File_Dropdown](#file_dropdown)
-      * [Saving_Images](#saving_images)
-      * [Selecting_More_Photos](#selecting_more_photos)
-      * [Sort_New_Photos](#sort_new_photos)
-      * [Clear_Favorites](#clear_favorites)
-* [Test_Images](#test_images)
+* [Introductory Video](#introductory-video)
+* [Using Photo Bracket](#using-photo-bracket)
+    * [Getting Started](#getting-started)
+    * [Comparing Images](#comparing-images)
+    * [File Dropdown](#file-dropdown)
+      * [Saving Images](#saving-images)
+      * [Selecting More Photos](#selecting-more-photos)
+      * [Sort New Photos](#sort-new-photos)
+      * [Clear Favorites](#clear-favorites)
+* [Test Images](#test-images)
 
 ## Overview
 PhotoBracket is an application that allows users to upload and sort through images. The home screen
- prompts users to select images from their computer directly. From there, the program will ask
-  users choose their favorite of two photos at a time. The chosen picture will advance to the next
-   round of comparisons while the photo not selected will be discarded. This process continues
-    until the user is satisfied with all remaining photos. At this point, the user can chose to
-     save the remaining images to a folder on their computer, upload more photos to compare, or
-      exit the app.
+prompts users to select images from their computer directly. From there, the program will ask
+users choose their favorite of two photos at a time. The chosen picture will advance to the next
+round of comparisons while the photo not selected will be discarded. This process continues
+until the user is satisfied with all remaining photos. At this point, the user can chose to
+save the remaining images to a folder on their computer, upload more photos to compare, or
+exit the app.
 
-## Introductory_Video
-Click [here]() for a 5 minute video that walks through this app.
+## Introductory Video
+Click [here]() for a 5-minute video that walks through this app.
 
-## Using_Photo_Bracket
+## Using Photo Bracket
 
-### Getting_Started
+### Getting Started
 To begin the user should compile and run Main. From there, a separate window will appear where
- users can interact with the app. First, the **Find files** button should be clicked. This will
- prompt the user to select images from their computer. The users will only be allowed to choose
-  jpeg, jpg, gif, tiff, tif or png files. Sorting will not begin until at least two photos have
-  been uploaded. Once this condition is met, the program will automatically being the sorting
-   process.
+users can interact with the app. First, the **Find files** button should be clicked. This will
+prompt the user to select images from their computer. The users will only be allowed to choose
+jpeg, jpg, gif, tiff, tif or png files. Sorting will not begin until at least two photos have
+been uploaded. Once this condition is met, the program will automatically being the sorting
+process.
 
-### Comparing_Images
+### Comparing Images
 Sorting begins with the program displaying two random images uploaded by the user. At this point,
- the user has four options. They must select one of the four buttons found at the bottom of the
-  window. These buttons are **Left**, **Both**, **Different Pics**, and **Right**. The user should
-   select:
-   * **Left** if they prefer the image on the left side of the window;
-   * **Right** if they prefer the image on the right side of the window;
-   * **Both** if they want both images to advance to the next round or;
-   * **Different pics** if they would like to not compare these images and instead choose between
-    different images. This action will not eliminate the images, but will add them back to the list
-     of images for the current round and present them later to be compared to different images.
+the user has four options. They must select one of the four buttons found at the bottom of the
+window. These buttons are **Left**, **Both**, **Different Pics**, and **Right**. The user should
+select:
+* **Left** if they prefer the image on the left side of the window;
+* **Right** if they prefer the image on the right side of the window;
+* **Both** if they want both images to advance to the next round or;
+* **Different pics** if they would like to not compare these images and instead choose between
+different images. This action will not eliminate the images, but will add them back to the list
+of images for the current round and present them later to be compared to different images.
 
-   As a quick feedback message, a green box will appear around the chosen images. The sorting
-    process continues until the user no longer wants to compare images. If the user only has
-     one image remaining or has indicated liking all remaining images (by failing to eliminate
-      them), they will be notified of their options by a popup window. This will ask the user to
-       either save the images to favorites or to continue sorting.
-       * **Save favorites** adds all remaining images to the favorites folder that may be later
-        exported to the user's computer
-       * **Continue sorting** allows the users to eliminate more photos and/or upload new images
+As a quick feedback message, a green box will appear around the chosen images. The sorting
+process continues until the user no longer wants to compare images. If the user only has
+one image remaining or has indicated liking all remaining images (by failing to eliminate
+them), they will be notified of their options by a popup window. This will ask the user to
+either save the images to favorites or to continue sorting.
+* **Save favorites** adds all remaining images to their personal favorites list that may be later
+exported to the user's computer
+* **Continue sorting** allows the users to eliminate more photos and/or upload new images
 
-### File_Dropdown
+### File Dropdown
 
-#### Saving_Images
-To save all favorited images, the user should select the *File* dropdown in the upper lefthand
- corner of the window. Next, they should select *Export favorites* This will prompt the user to
-  either save the images to an existing folder on their computer or to create a new folder to save
-   the images to.
+#### Saving Images
+To save all favorite images, the user should select the *File* dropdown in the upper left-hand
+corner of the window. Next, they should select *Export favorites* This will prompt the user to
+either save the images to an existing folder on their computer or to create a new folder to save
+the images to.
 
-#### Selecting_More_Photos
+#### Selecting More Photos
 At any time, the user can click on the *File* dropdown and select *Select more photos* to add
- photos to the current round they are in to be compared against the remaining images.
+photos to the current round they are in to be compared against the remaining images.
 
-#### Sort_New_Photos
+#### Sort New Photos
 At any time, the user can click on the *File* dropdown and select *Sort new photos* to eliminate
- all remaining photos and select new ones from their computer.
+all remaining photos and select new ones from their computer.
 
-#### Clear_Favorites
+#### Clear Favorites
 At any time, the user can click on the *File* dropdown and select *Clear favorites* to empty
  list of favorited images.
 
-## Test_Images
+## Test Images
 If you would like, below are sample images that you may use download to upload into the app when
  testing. We highly recommend at least viewing the images :)
 * [Adorable dog 1](https://cf.ltkcdn.net/dogs/images/orig/206270-1600x1067-Christmas-puppy.jpg)

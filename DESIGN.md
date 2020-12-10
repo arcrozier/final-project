@@ -19,6 +19,11 @@ This is the class that handles all GUI-related tasks. This creates the window, r
 input and handles keystrokes. It displays the images and interacts with the [`Bracket`](#bracket)
 but purely represents the GUI.
 
+This class implements the ComponentListener and WindowListener interfaces so that it can respond to
+changes the user makes to the window. This, of course, necessitates declaring all the methods
+included in those interfaces, but only one method from each interface is implemented
+(`componentResized()` and `windowClosing()`)
+
 As soon as an image is rejected by the user, the file is de-referenced and garbage collected.
 
 This was done to logically chunk all GUI-related items in order to maximize readability and ease
@@ -51,25 +56,24 @@ and instructs the user on what to do next (either save the image to favorites or
 This was chosen to guide the user and minimize confusion. Next is a methods that support the
 transformation of a list images to a usable string: `writeListToFiles`. This allows the user to
 save the images they've selected by ensuring that the images are referenced in the appropriate way.
-At this point in the code, there are several helper methods that assist in the the resizing of
+At this point in the code, there are several helper methods that assist in the resizing of
 images in respond to a change in window size (`component****`). This was broken up to maximize
 readability. The code then covers what to do when the app is closed with the `windowClosing`
-method. Finally, this class implements the `imageFiler` method that prohibits users from selecting
-files that are not appropriate for the app. Only jpeg, jpg, gif, tiff, tif and png files are
-allowed. This was done to avoid users encountering errors when using the app.
+method. 
 
 ### ImageFilter
 This is a helper class within `Window` that sorts images from everything else when the user is
-selecting files to add to the bracket. This prevents the user from uploading a file that is not
-compatible with the functionality of this program. This was done in order assist the users and
-to avoid creating code to handle incompatible files/display unnecessary error messages.
+selecting files to add to the bracket. Only jpeg, jpg, gif, tiff, tif and png files are allowed.  
+This prevents the user from uploading a file that is not compatible with the functionality of this 
+program. This was done in order assist the users and to avoid creating code to handle incompatible 
+files/display unnecessary error messages.
 
 ## Bracket
 This is the real backend and with all the intelligence. Currently, it's
-arranged like a tree. It contains a reference to a single [round](#round), which has a
+arranged like a `LinkedList`. It contains a reference to a single [round](#round), which has a
 corresponding round of winners. Each time the `Bracket` runs out of pictures for the current
-`Round` it advances the current round to its winner, like how one recursively accesses a tree
-node's left and right subtrees.
+`Round` it advances the current round to its winner, like how one can iteratively traverse a 
+`LinkedList`'s nodes.
 
 It does not keep references to any images, instead handing them directly from the current
 `Round` to the Window.
@@ -77,7 +81,7 @@ It does not keep references to any images, instead handing them directly from th
 This was done to maximize efficiency and simplicity. Because of this structure, the amount of
 code needed was minimized and the program runs more quickly this way. The structure of `Bracket`
 was decided upon due to its resemblance to a competition bracket. Users go through all uploaded
-images before advancing onto the a round of winners in order to eliminate the worst photos in the beginning
+images before advancing onto the round of winners in order to eliminate the worst photos in the beginning
 
 ### Round
 This is essentially just a List with some additional methods. It contains all the [`ImageFile
