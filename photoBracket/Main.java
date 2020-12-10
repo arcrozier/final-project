@@ -5,7 +5,7 @@ package photoBracket;
  */
 public class Main {
 
-    // just creates a new window
+    // creates a new window and bracket therefore running the program
     public static void main(String[] args) {
         Bracket bracket = new Bracket();
 
