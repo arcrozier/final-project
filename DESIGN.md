@@ -10,7 +10,7 @@
 * [ImageFile](#imagefile)
 
 ## Main
-This is the entry point for the program. Compile and run this file to use the PhotoBracket app.
+This is the entry point for the program. Compile and run this file to use the Photo Bracket app.
 
 ## Window
 This is the class that handles all GUI-related tasks. This creates the window, responds to user

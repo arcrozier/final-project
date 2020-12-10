@@ -1,58 +1,64 @@
-# Photo Bracket
+# Photo Bracket User Guide
 
 This is a high-level overview of how this project is structured and guide as to how to
  use PhotoBracket app.
 
 ## Contents:
-* [Classes](#classes)
-    * [Main](#main)
-    * [Window](#window)
-        * [ImageFilter](#imagefilter)
-    * [Bracket](#bracket)
-        * [Round](#round)
-            * [RoundAction](#roundaction)
-    * [ImageFile](#imagefile)
+* [Overview](#overview)
+* [Using Photo Bracket](#using photo bracket)
+    * [Getting Started](#getting started)
+    * [Comparing Images ](#comparing images)
+    * [File Dropdown](#file dropdown)
+      * [Saving Images](#saving images)
+      * [Selecting More Photos](#selecting more photos)
+      * [Sort New Photos](#sort new photos)
+      * [Clear Favorites](#clear favorites)
 
-## Classes
+## Overview
+PhotoBracket is an application that allows users to upload and sort through images. The home screen
+ prompts users to select images from their computer directly. From there, the program will ask users
+  choose their favorite of two photos at a time. The chosen picture will advance to the next round of
+  comparisons while the photo not selected will be discarded. This process continues until the user is
+   satisfied with all remaining photos. At this point, the user can chose to save the remaining images
+    to a folder on their computer, upload more photos to sort, or exit the application.
 
-### Main
-This is the entry point for the program. Compile and run this file to use the PhotoBracket app.
+## Using Photo Bracket
 
-### Window
-This is the class that handles all GUI-related tasks. This creates the window, responds to user
- input and handles keystrokes. It displays the images and interacts with the [`Bracket`](#bracket)
-  but purely represents the GUI.
+### Getting Started
+To being, compile and run Main. From there, a separate window will appear where users can interact with
+ the app. First, the "Find files" button is to be clicked. This will prompt the user to select images
+  from their computer. The users will only be allowed to chose jpeg, jpg, or png files. The sorting
+   will not begin until at least two photos have been uploaded. Once this condition is met, the program
+    will automatically being the sorting process.
 
-  As soon as an image is rejected by the user, the file is de-referenced and garbage collected.
+### Comparing Images
+Sorting begins with the program displaying two randomly selected images at a time. At this point, the user
+ has four options. They must select one of the four buttons found at the bottom of the window. These buttons
+  are "Left," "Both," "Different Pics," and "Right." The user should select "Left" if they prefer the image
+   on the left side of the screen, "Right" if they prefer the image on the right side of the window, "Both"
+    if they want both images to advance to the next round, or "Different pics" if they would like to keep not
+     compare these images and would like to compare different images. This action will not eliminate the images,
+      it will instead add them back to the list of images for the current round and present them to be compared
+       later to different images. This process continues until the user no longer wants to sort images. If the
+        user is down to one image left or has indicated liking all remaining images (by falling to eliminate any
+          of them), they will be notified of this by a popup window. The user will then be asked to save the images
+           or to continue sorting.
 
-#### ImageFilter
-This is a helper class within `Window` that just sorts images from everything else when the user is
- selecting files to add to the bracket.
+### File Dropdown
 
-### Bracket
-This is the real backend and with all the intelligence. Currently, it's
- arranged like a tree. It contains a reference to a single [round](#round), which has a
-  corresponding round of winners. Each time the `Bracket` runs out of pictures for the current
-   `Round` it advances the current round to its winner, like how one recursively accesses a tree
-    node's left and right subtrees.
+#### Saving Images
+To save all remaining images, the user should select the "File" dropdown in the upper lefthand corner. Next, they
+ should select "Export favorites." This will prompt the user to either save the images to a existing folder on their
+  computer or to create a new folder to save the images to.
 
-It does not keep references to any images, instead handing them directly from the current
-     `Round` to the Window.
+#### Selecting More Photos
+At any time, the user can click on the "File" dropdown and select "Select more photos" to add photos to the current
+ round they are in to be sorting with the remaining images.
 
-#### Round
-This is essentially just a List with some additional methods. It contains all the [`ImageFile
-`](#imagefile)s that
- are currently being considered. It then has a few helper methods that check if the round is
-  empty and retrieve a pair of photos to show to the user. It attempts to be memory efficient by
-   immediately dropping references to images as soon as its Bracket requests them.
+#### Sort New Photos
+At any time, the user can click on the "File" dropdown and select "Sort new photos" to eliminate all remaining photos
+ and select new ones from their computer.
 
-##### RoundAction
-This is not implemented but contains the bare bones of what could eventually be constructed into
- a real undo/redo system. This essentially tracks what has been modified and how so that it can
-  be undone.
-
-### ImageFile
-This is a File with some extra methods for being an image. It has the ability to convert `File
-` objects into `ImageFile`s (both arrays and single files). It also a method that reads in the
- contents of an image and returns an appropriately sized version that can be displayed in the
-  [`Window`](#window).
+#### Clear Favorites 
+At any time, the user can click on the "File" dropdown and select "Clear favorites" to empty the images currently stored
+ in favorites.
