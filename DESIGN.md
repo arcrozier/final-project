@@ -48,7 +48,7 @@ display in response to the respective button selection. The `****chosen` methods
 the `updatePanel` helper method). As mentioned earlier, `populate` is an important method that
 actually retrieves the next set of images to be displayed and compared. At this point, the `Window`
 class covers what must be done when the user wants to save their favorite images. This is done
-using the `exportFavorites`method. Here, the code prepares the remaining images to be exported and
+using the `exportFavorites` method. Here, the code prepares the remaining images to be exported and
 allows the users to save these files in a folder onto their computer. This was done to maximize
 user experience. After using the app, they won't have to search for their favorite picture(s),
 instead they can reference the folder they specified or created for the chosen image(s).
@@ -61,7 +61,9 @@ confusion. Next is a methods that support the transformation of a list images to
 images are referenced in the appropriate way. At this point in the code, there are several helper
 methods that assist in the resizing of images in respond to a change in window size
 (`component****`). This was broken up to maximize readability. The code then covers what to do when
-the app is closed with the `windowClosing` method. 
+the app is closed with the `windowClosing` method.
+
+// talk about update panel more
 
 ### ImageFilter
 This is a helper class within `Window` that sorts images from everything else when the user is
@@ -71,6 +73,7 @@ program. This was done in order assist the users and to avoid creating code to h
 files/display unnecessary error messages.
 
 ## Bracket
+// expand this section
 This is the real backend and with all the intelligence. It is arranged like a `LinkedList` that
 contains a reference to a single [round](#round), which has a corresponding round of winners. Each
 time the `Bracket` runs out of pictures for the current `Round` it advances the current round to
@@ -82,7 +85,8 @@ It does not keep references to any images, instead handing them directly from th
 This was done to maximize efficiency and simplicity. Because of this structure, the amount of
 code needed was minimized and the program runs more quickly this way. The structure of `Bracket`
 was decided upon due to its resemblance to a competition bracket. Users go through all uploaded
-images before advancing onto the round of winners in order to eliminate the worst photos in the beginning
+images before advancing onto the round of winners in order to eliminate the worst photos in the
+beginning
 
 ### Round
 This is essentially just a List with some additional methods. It contains all the [`ImageFile
@@ -95,9 +99,11 @@ This approach was chosen because it seemed to be the simplest way to store image
 the program to easily add and access images.
 
 #### RoundAction
-This is not implemented but contains the bare bones of what could eventually be constructed into
-a real undo/redo system. This essentially tracks what has been modified and how so that it can
-be undone.
+This is not currently implemented but contains the bare bones of what could eventually be
+constructed into a real undo/redo system. This essentially tracks what has been modified and how
+so that it can be undone.
+
+// talk about why this was kept
 
 ## ImageFile
 This is a File with some extra methods for being an image. It has the ability to convert `File
