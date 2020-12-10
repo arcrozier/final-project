@@ -24,6 +24,40 @@ As soon as an image is rejected by the user, the file is de-referenced and garba
 This was done to logically chunk all GUI-related items in order to maximize readability and ease
 of use.
 
+The first portion of the `Window` class is devoted to creating and setting up the display panel -
+including all necessary buttons (done with `makeButtonPanel`) and the dropdown - and establishing
+the `bracket` and image storing
+structure. `refreshPics` and `makePicPanel` work to display the images themselves and are called
+every time the images need to be changed/updated. `makePromptPanel` sets up the initial view of the
+app, instructing users to select their initial photos. This was done to guide users and to make
+the process as simple as possible for them. The `fileDialog` method creates the popup window that
+allows users to upload images. This was also done to support ease of use. `choseFiles` is where the
+sorting begins. This method calls on other helper methods (such as `populate`) to select files to
+be compared, whether that be to reset the current images...... From here, the code focuses on what
+to do in response to the click of any of the four buttons on the bottom of the window. the
+`animate****` methods instruct the program on how to adjust the display in response to the
+respective button selection. The `****chosen` methods interact with the `Bracket` class to respond
+to the users choice and to generate new images (which is done by calling the `updatePanel` helper
+method). As mentioned earlier, `populate` is an important method that actually retrieves the next
+set of images to be displayed and compared. At this point, the `Window` class covers what must be
+done when the user wants to save their favorite images. This is done using the `exportFavorites`
+method. Here, the code prepares the remaining images to be exported and allows the users to save
+these files in a folder onto their computer. This was done to maximize user experience. After using
+the app, they won't have to search for their favorite picture(s), instead they can reference the
+folder they specified or created for the chosen image(s). `clearFavorites` erases the images stored
+in favorites in case the user decides that they do not like the images they have chosen. The `done`
+method is called when there are no more pictures to compare. In this event, a popup window appears
+and instructs the user on what to do next (either save the image to favorites or continue sorting).
+This was chosen to guide the user and minimize confusion. Next is a methods that support the
+transformation of a list images to a usable string: `writeListToFiles`. This allows the user to
+save the images they've selected by ensuring that the images are referenced in the appropriate way.
+At this point in the code, there are several helper methods that assist in the the resizing of
+images in respond to a change in window size (`component****`). This was broken up to maximize
+readability. The code then covers what to do when the app is closed with the `windowClosing`
+method. Finally, this class implements the `imageFiler` method that prohibits users from selecting
+files that are not appropriate for the app. Only jpeg, jpg, gif, tiff, tif and png files are
+allowed. This was done to avoid users encountering errors when using the app.
+
 ### ImageFilter
 This is a helper class within `Window` that sorts images from everything else when the user is
 selecting files to add to the bracket. This prevents the user from uploading a file that is not
@@ -64,7 +98,9 @@ be undone.
 This is a File with some extra methods for being an image. It has the ability to convert `File
 ` objects into `ImageFile`s (both arrays and single files). It also has a method that reads in the
 contents of an image and returns an appropriately sized version that can be displayed in the
-[`Window`](#window).
+[`Window`](#window). In this file, methods such as `getIcon`, `getScaleFactor` and
+`getScaleFactorToFit` work to size the images appropriately so they fill approximately half of the
+window and are adjusted along with the window itself.
 
 This approach was selected in order to standardize the files uploaded by the users to allow the
 rest of the program to easily handle the images.

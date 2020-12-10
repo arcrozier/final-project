@@ -34,8 +34,9 @@ Click [here]() for a 5 minute video that walks through this app.
 To begin the user should compile and run Main. From there, a separate window will appear where
  users can interact with the app. First, the **Find files** button should be clicked. This will
  prompt the user to select images from their computer. The users will only be allowed to choose
-  jpeg, jpg, or png files. Sorting will not begin until at least two photos have been uploaded.
-   Once this condition is met, the program will automatically being the sorting process.
+  jpeg, jpg, gif, tiff, tif or png files. Sorting will not begin until at least two photos have
+  been uploaded. Once this condition is met, the program will automatically being the sorting
+   process.
 
 ### Comparing_Images
 Sorting begins with the program displaying two random images uploaded by the user. At this point,
