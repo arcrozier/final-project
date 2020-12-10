@@ -24,21 +24,41 @@ class Window implements ComponentListener, WindowListener {
     private final JFileChooser fileChooser;
     private final File favorites;
     private final File preferences;
+
+    // all settings
     private Map<String, String> settings;
+
+    // the panel that displays the select files prompt/shows the images
     private final JPanel contentPanel;
+
+    // the layout for the contentPanel
     private final CardLayout contentLayout;
+
     private Bracket bracket;
+
+    // the pair of images currently being displayed
     private ImageFile[] images; // [leftPic, rightPic]
 
+    // map keystrokes to actions
     private static final String KEY_LEFT = "LEFT";
     private static final String KEY_RIGHT = "RIGHT";
     private static final String KEY_UP = "UP";
     private static final String KEY_DOWN = "DOWN";
+
+    // the names for each panel in contentLayout
     private static final String PROMPT_PANEL = "prompt";
     private static final String PIC_PANEL = "pics";
+
+    // the name of the setting for the directory to open the file chooser at
     private static final String PREFERENCE_DEFAULT_DIR = "default directory";
+
+    // the delay for highlighting the selected image(s) in milliseconds
     private static final int ANIMATION_DELAY = 500;
+
+    // the padding around images
     private static final int PAD = 5;
+
+    // the color to use when highlighting the selected image(s)
     private static final Color SELECTED_COLOR = new Color(47, 191, 41);
 
     /**
