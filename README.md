@@ -27,7 +27,7 @@ exit the app.
 
 ## Introductory Video
 Click [here](https://www.loom.com/share/83f109343bd84145b97ad81c72b39da0)
-for a 5 minute video that walks through this app.
+for a 5-minute video that walks through this app.
 
 ## Using Photo Bracket
 

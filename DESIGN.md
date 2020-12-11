@@ -90,9 +90,9 @@ contains a reference to a single [round](#round), which has a corresponding roun
 time the `Bracket` runs out of pictures for the current `Round` it advances the current round to
 its winner, like how one can iteratively traverse a `LinkedList`'s nodes. As the users advances
 through the program, the `roundCount` variable is incremented and displayed to notify the user of
-their progress. The developers added this function for the users convenience. `isEmpty` and
+their progress. The developers added this function for the users' convenience. `isEmpty` and
 `hasNextPair` are repeatedly relied upon to understand the users position in the current round with
-the former returning whether or not the user has 0 images and the latter indicating if there is
+the former returning whether the user has 0 images and the latter indicating if there is
 another pair of images that can be compared. The `add` method simply expands the current round by
 adding any images that have been passed into it. This is used to update the images the program
 needs to keep track of.
