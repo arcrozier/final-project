@@ -543,6 +543,8 @@ class Window implements ComponentListener, WindowListener {
         errorDialog.setLayout(new BoxLayout(errorDialog, BoxLayout.Y_AXIS));
         errorDialog.add(new JLabel());
         JTextArea messageArea = new JTextArea(messageBuilder.toString(), 10, 40);
+        messageArea.setLineWrap(true);
+        messageArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(messageArea);
         errorDialog.add(scrollPane);
         JOptionPane.showMessageDialog(
