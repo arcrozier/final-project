@@ -25,8 +25,6 @@ until the user is satisfied with all remaining photos. At this point, the user c
 save the remaining images to a folder on their computer, upload more photos to compare, or
 exit the app.
 
-Note: this app is most compatable with PCs 
-
 ## Introductory Video
 Click [here](https://www.loom.com/share/83f109343bd84145b97ad81c72b39da0)
 for a 5 minute video that walks through this app.
