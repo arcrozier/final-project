@@ -32,6 +32,11 @@ included in those interfaces, but only one method from each interface is impleme
 This sectioning was done to logically chunk all GUI-related items in order to maximize readability
 and ease of use for the developers and later readers.
 
+The first portion of the `Window` class is devoted to creating and setting up the display panel
+(including all necessary buttons (done with `makeButtonPanel`), the display of completed `Round`
+and images left in the `Round`, in addition to the dropdown) and establishing
+the `bracket` and image storing structure. `refreshPics` and `makePicPanel` work to display the
+images themselves and are called every time the images need to be changed/updated.
 The first portion of the `Window` class is devoted to creating and setting up the display panel -
 including all necessary buttons (done with `makeButtonPanel`), the main panel (done with 
 `makePicPanel()` and `makePromptPanel()`), and the dropdown - and establishing
@@ -88,7 +93,9 @@ files/display unnecessary error messages.
 This is the real backend and with all the intelligence. It is arranged like a `LinkedList` that
 contains a reference to a single [round](#round), which has a corresponding round of winners. Each
 time the `Bracket` runs out of pictures for the current `Round` it advances the current round to
-its winner, like how one can iteratively traverse a `LinkedList`'s nodes. `isEmpty` and
+its winner, like how one can iteratively traverse a `LinkedList`'s nodes. As the users advances
+through the program, the `roundCount` variable is incremented and displayed to notify the user of
+their progress. The developers added this function for the users convenience. `isEmpty` and
 `hasNextPair` are repeatedly relied upon to understand the users position in the current round with
 the former returning whether or not the user has 0 images and the latter indicating if there is
 another pair of images that can be compared. The `add` method simply expands the current round by

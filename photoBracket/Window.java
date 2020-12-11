@@ -346,8 +346,8 @@ class Window implements ComponentListener, WindowListener {
         both.addActionListener(e -> animateBoth());
         neither.addActionListener(e -> newPics());
 
-        JLabel roundsLabel = new JLabel("Rounds:");
-        JLabel picsLabel = new JLabel("Pictures remaining:");
+        JLabel roundsLabel = new JLabel("Rounds Completed:");
+        JLabel picsLabel = new JLabel("Pictures Remaining in this Round:");
 
         for (Component component : Arrays.asList(left, both, neither, right, roundsLabel, rounds,
                 picsLabel, pics)) {
