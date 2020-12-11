@@ -34,14 +34,9 @@ and ease of use for the developers and later readers.
 
 The first portion of the `Window` class is devoted to creating and setting up the display panel
 (including all necessary buttons (done with `makeButtonPanel`), the display of completed `Round`
-and images left in the `Round`, in addition to the dropdown) and establishing
-the `bracket` and image storing structure. `refreshPics` and `makePicPanel` work to display the
-images themselves and are called every time the images need to be changed/updated.
-The first portion of the `Window` class is devoted to creating and setting up the display panel -
-including all necessary buttons (done with `makeButtonPanel`), the main panel (done with 
-`makePicPanel()` and `makePromptPanel()`), and the dropdown - and establishing
-the `bracket` and image storing structure. `refreshPics` displays the
-images themselves and is called every time the images need to be changed/updated.
+and images left in the `Round`, the main panel (done with `makePicPanel()` and `makePromptPanel()
+`), and the dropdown) and establishing the `bracket` and image storing structure. `refreshPics` 
+displays the images themselves and is called every time the images need to be changed/updated.
 `makePromptPanel` sets up the initial view of the app, instructing users to select their initial
 photos. This was done to guide users and to make the process as simple as possible for them. The
 `fileDialog` method creates the popup window that allows users to upload images. This was also done
