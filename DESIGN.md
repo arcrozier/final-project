@@ -11,8 +11,8 @@
 
 ## Main
 This is the entry point for the program. Here, a new Bracket and Window object are
-generated, creating all the necessary conditions for Photo Bracket to be executed. Compile and run
-this file to use the Photo Bracket app. The developers chose to keep main simple for readability
+generated, creating all the necessary conditions for Photo Bracket to be executed. Compile all files
+and run `Main` to use the Photo Bracket app. The developers chose to keep main simple for readability
 purposes.
 
 ## Window
