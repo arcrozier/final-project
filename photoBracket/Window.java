@@ -491,6 +491,7 @@ class Window implements ComponentListener, WindowListener {
                     export.getSelectedFile()).isDirectory()) {
                 List<String> filePaths = Files.readAllLines(favorites.toPath());
                 List<String> failed = new ArrayList<>();
+                List<String> notFound = new ArrayList<>();
                 for (String filePath : filePaths) {
                     File f = new File(filePath);
                     try {
@@ -498,30 +499,19 @@ class Window implements ComponentListener, WindowListener {
                                 StandardCopyOption.COPY_ATTRIBUTES);
                     } catch (FileAlreadyExistsException e) {
                         failed.add(filePath);
+                    } catch (IOException e) {
+                        notFound.add(filePath);
                     }
                 }
-                if (failed.size() != 0) {
+                if (!failed.isEmpty()) {
                     StringBuilder messageBuilder = new StringBuilder("The following file(s) failed to" +
                             " copy because a file with the same name already exists in the directory " +
                             "(");
-                    messageBuilder.append(failed.size());
-                    messageBuilder.append("):");
-                    for (String file : failed) {
-                        messageBuilder.append("\n");
-                        messageBuilder.append(file);
-                    }
-                    JPanel errorDialog = new JPanel();
-                    errorDialog.setLayout(new BoxLayout(errorDialog, BoxLayout.Y_AXIS));
-                    errorDialog.add(new JLabel());
-                    JTextArea messageArea = new JTextArea(messageBuilder.toString(), 10, 40);
-                    JScrollPane scrollPane = new JScrollPane(messageArea);
-                    errorDialog.add(scrollPane);
-                    JOptionPane.showMessageDialog(
-                            frame,
-                            errorDialog,
-                            "Export failed",
-                            JOptionPane.ERROR_MESSAGE
-                    );
+                    showExportError(failed, messageBuilder);
+                } else if (!notFound.isEmpty()) {
+                    StringBuilder messageBuilder = new StringBuilder("The following file(s) failed to" +
+                            " copy because they could not be found (");
+                    showExportError(notFound, messageBuilder);
                 } else {
                     JOptionPane.showMessageDialog(
                             frame,
@@ -540,6 +530,27 @@ class Window implements ComponentListener, WindowListener {
             );
             Logger.getLogger(getClass().getName()).warning("Unable to export due to IOException");
         }
+    }
+
+    private void showExportError(List<String> failed, StringBuilder messageBuilder) {
+        messageBuilder.append(failed.size());
+        messageBuilder.append("):");
+        for (String file : failed) {
+            messageBuilder.append("\n");
+            messageBuilder.append(file);
+        }
+        JPanel errorDialog = new JPanel();
+        errorDialog.setLayout(new BoxLayout(errorDialog, BoxLayout.Y_AXIS));
+        errorDialog.add(new JLabel());
+        JTextArea messageArea = new JTextArea(messageBuilder.toString(), 10, 40);
+        JScrollPane scrollPane = new JScrollPane(messageArea);
+        errorDialog.add(scrollPane);
+        JOptionPane.showMessageDialog(
+                frame,
+                errorDialog,
+                "Export failed",
+                JOptionPane.ERROR_MESSAGE
+        );
     }
 
     /**
