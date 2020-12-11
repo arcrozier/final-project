@@ -588,7 +588,7 @@ class Window implements ComponentListener, WindowListener {
                 options[0]);
         // saves files to favorites
         if (after == JOptionPane.YES_OPTION) {
-            if (!writeListToFile(bracket.getAllImageFiles(), favorites.toPath(),
+            if (!writeListToFile(bracket.getAllImageFiles(), favorites,
                     StandardOpenOption.APPEND)) {
                 JOptionPane.showMessageDialog(frame,
                         "An error occurred while saving favorites. You can try again and see " +
@@ -614,14 +614,15 @@ class Window implements ComponentListener, WindowListener {
      * @param <T>    - Accepts any Object type for the list
      * @return - True if files were written successfully, false otherwise
      */
-    private <T> boolean writeListToFile(List<T> list, Path file, StandardOpenOption option) {
+    private <T> boolean writeListToFile(List<T> list, File file, StandardOpenOption option) {
         StringBuilder sb = new StringBuilder();
         for (Object obj : list) {
             sb.append(obj.toString());
             sb.append('\n');
         }
         try {
-            Files.write(file, sb.toString().getBytes(), option);
+            file.createNewFile();
+            Files.write(file.toPath(), sb.toString().getBytes(), option);
             return true;
         } catch (IOException e) {
             return false;
