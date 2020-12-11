@@ -12,7 +12,8 @@
 ## Main
 This is the entry point for the program. Here, a new Bracket and Window object are
 generated, creating all the necessary conditions for Photo Bracket to be executed. Compile and run
-this file to use the Photo Bracket app.
+this file to use the Photo Bracket app. The developers chose to keep main simple for readability
+purposes.
 
 ## Window
 This is the class that handles all GUI-related tasks. This creates the window, responds to user
@@ -40,8 +41,9 @@ photos. This was done to guide users and to make the process as simple as possib
 `fileDialog` method creates the popup window that allows users to upload images. This was also done
 to support ease of use.
 
-`choseFiles` is where the sorting begins. This method calls on other helper methods (such as
-`populate`) to select files to be compared, whether that be to reset the current images......
+`chooseFiles` is a helper method allows the user to select files and is used to gather the files
+selected. This is where the sorting begins. If the user uploaded at least two images, this method
+calls on other helper methods (such as `populate`) to select the initial files to be compared.
 
 From here, the code focuses on what to do in response to the click of any of the four buttons on
 the bottom of the window. the `animate****` methods instruct the program on how to adjust the
@@ -129,7 +131,7 @@ to know where the user is in the `Round` and what need to be done next. While ea
 from those in `Bracket`, they bear the same name to indicate the similar outcome. These methods
 refer to the uploaded images themselves while `Bracket`'s version of these methods refer to the
 `Round`. `getFiles` returns a copt the list of images. This is done in order to protect the
-original list of images and to avoid any issues with referencing images. 
+original list of images and to avoid any issues with referencing images.
 
 This approach was chosen because it seemed to be the simplest way to store images. Lists allow
 the program to easily add and access images. Additionally, this chunking makes the code more

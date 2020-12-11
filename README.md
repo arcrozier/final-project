@@ -31,8 +31,8 @@ Click [here]() for a 5 minute video that walks through this app.
 ## Using Photo Bracket
 
 ### Getting Started
-To begin the user should compile and run Main. From there, a separate window will appear where
-users can interact with the app. First, the **Find files** button should be clicked. This will
+To begin the user should compile all files and run Main. From there, a separate window will appear
+where users can interact with the app. First, the **Find files** button must be clicked. This will
 prompt the user to select images from their computer. The users will only be allowed to choose
 jpeg, jpg, gif, tiff, tif or png files. Sorting will not begin until at least two photos have
 been uploaded. Once this condition is met, the program will automatically being the sorting
