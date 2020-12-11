@@ -43,12 +43,16 @@ Sorting begins with the program displaying two random images uploaded by the use
 the user has four options. They must select one of the four buttons found at the bottom of the
 window. These buttons are **Left**, **Both**, **Different Pics**, and **Right**. The user should
 select:
-* **Left** if they prefer the image on the left side of the window;
-* **Right** if they prefer the image on the right side of the window;
-* **Both** if they want both images to advance to the next round or;
+* **Left** if they prefer the image on the left side of the window. This can also be accomplished
+ by selecting the left arrow key on the keyboard;
+* **Right** if they prefer the image on the right side of the window. This can also be accomplished
+ by selecting the right arrow key on the keyboard;
+* **Both** if they want both images to advance to the next round or.  This can also be accomplished
+ by selecting the up arrow key on the keyboard;
 * **Different pics** if they would like to not compare these images and instead choose between
-different images. This action will not eliminate the images, but will add them back to the list
-of images for the current round and present them later to be compared to different images.
+ different images. This action will not eliminate the images, but will add them back to the list
+ of images for the current round and present them later to be compared to different images. This can
+ also be accomplished by selecting the down arrow key on the keyboard;
 
 As a quick feedback message, a green box will appear around the chosen images. The user will be
 asked to sort through all uploaded images as the first round. Subsequent rounds will ask the user
