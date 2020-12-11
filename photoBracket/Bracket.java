@@ -6,6 +6,7 @@ public class Bracket {
 
     private Round currentRound;
     private boolean delta;
+    private int roundCount;
 
     /**
      * Initializes a bracket with the given files
@@ -15,6 +16,7 @@ public class Bracket {
     public Bracket(ImageFile[] files) {
         currentRound = new Round(files);
         delta = false;
+        roundCount = 0;
     }
 
     /**
@@ -80,6 +82,7 @@ public class Bracket {
         if (currentRound.isEmpty() && delta) {
             currentRound = currentRound.winners;
             delta = false;
+            roundCount++;
         }
         return currentRound.getNextPair();
     }
@@ -133,6 +136,20 @@ public class Bracket {
         List<ImageFile> files = currentRound.getFiles();
         files.addAll(currentRound.winners.getFiles());
         return files;
+    }
+
+    /**
+     * @return - the number of rounds completed (starts at 0)
+     */
+    public int getRoundCount() {
+        return roundCount;
+    }
+
+    /**
+     * @return  - The number of photos remaining in this round
+     */
+    public int getRoundSize() {
+        return currentRound.getSize();
     }
 
     /**
@@ -253,6 +270,13 @@ public class Bracket {
         public List<ImageFile> getFiles() {
             return new ArrayList<>(files); // prevent the private list from being modified and
             // breaking encapsulation
+        }
+
+        /**
+         * Gets the number of images remaining in this round
+         */
+        public int getSize() {
+            return files.size();
         }
 
         /**

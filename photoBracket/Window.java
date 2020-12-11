@@ -1,16 +1,15 @@
 package photoBracket;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 
 /**
@@ -24,6 +23,8 @@ class Window implements ComponentListener, WindowListener {
     private final JFileChooser fileChooser;
     private final File favorites;
     private final File preferences;
+    private final JLabel rounds;
+    private final JLabel pics;
 
     // all settings
     private Map<String, String> settings;
@@ -93,6 +94,9 @@ class Window implements ComponentListener, WindowListener {
         fileChooser = fileDialog();
         this.bracket = bracket;
         images = new ImageFile[2];
+
+        rounds = new JLabel();
+        pics = new JLabel();
 
         frame = new JFrame("Photo Bracket");
         frame.setMinimumSize(new Dimension(600, 600));
@@ -342,14 +346,14 @@ class Window implements ComponentListener, WindowListener {
         both.addActionListener(e -> animateBoth());
         neither.addActionListener(e -> newPics());
 
-        buttons.add(left, buttonConstraints);
-        buttonConstraints.gridx += 1;
-        buttons.add(both, buttonConstraints);
-        buttonConstraints.gridx += 1;
-        buttons.add(neither, buttonConstraints);
-        buttonConstraints.gridx += 1;
-        buttons.add(right, buttonConstraints);
-        buttonConstraints.gridx += 1;
+        JLabel roundsLabel = new JLabel("Rounds:");
+        JLabel picsLabel = new JLabel("Pictures remaining:");
+
+        for (Component component : Arrays.asList(left, both, neither, right, roundsLabel, rounds,
+                picsLabel, pics)) {
+            buttons.add(component, buttonConstraints);
+            buttonConstraints.gridx += 1;
+        }
 
         buttons.setBorder(BorderFactory.createEtchedBorder());
 
@@ -435,6 +439,8 @@ class Window implements ComponentListener, WindowListener {
     private void updatePanel() {
         if (bracket.hasNextPair()) {
             images = bracket.getNextPair();
+            rounds.setText(Integer.toString(bracket.getRoundCount()));
+            pics.setText(Integer.toString(bracket.getRoundSize()));
             refreshPics();
         } else {
             done();
@@ -453,7 +459,8 @@ class Window implements ComponentListener, WindowListener {
         if (bracket.hasNextPair()) {
             images = bracket.getNextPair();
             contentLayout.show(contentPanel, PIC_PANEL);
-
+            rounds.setText(Integer.toString(bracket.getRoundCount()));
+            pics.setText(Integer.toString(bracket.getRoundSize()));
         } else {
             contentLayout.show(contentPanel, PROMPT_PANEL);
         }
