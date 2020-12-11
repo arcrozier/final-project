@@ -33,9 +33,10 @@ This sectioning was done to logically chunk all GUI-related items in order to ma
 and ease of use for the developers and later readers.
 
 The first portion of the `Window` class is devoted to creating and setting up the display panel -
-including all necessary buttons (done with `makeButtonPanel`) and the dropdown - and establishing
-the `bracket` and image storing structure. `refreshPics` and `makePicPanel` work to display the
-images themselves and are called every time the images need to be changed/updated.
+including all necessary buttons (done with `makeButtonPanel`), the main panel (done with 
+`makePicPanel()` and `makePromptPanel()`), and the dropdown - and establishing
+the `bracket` and image storing structure. `refreshPics` displays the
+images themselves and is called every time the images need to be changed/updated.
 `makePromptPanel` sets up the initial view of the app, instructing users to select their initial
 photos. This was done to guide users and to make the process as simple as possible for them. The
 `fileDialog` method creates the popup window that allows users to upload images. This was also done
@@ -46,7 +47,7 @@ selected. This is where the sorting begins. If the user uploaded at least two im
 calls on other helper methods (such as `populate`) to select the initial files to be compared.
 
 From here, the code focuses on what to do in response to the click of any of the four buttons on
-the bottom of the window. the `animate****` methods instruct the program on how to adjust the
+the bottom of the window. The `animate****` methods instruct the program on how to adjust the
 display in response to the respective button selection. The `****chosen` methods interact with the
 `Bracket` class to respond to the users choice and to generate new images (which is done by calling
 the `updatePanel` or `populate` (in the case of initializing the panel) helper method). As
@@ -63,7 +64,7 @@ instead they can reference the folder they specified or created for the chosen i
 like the images they have chosen. The `done` method is called when there are no more pictures to
 compare. In this event, a popup window appears and instructs the user on what to do next (either
 save the image to favorites or continue sorting). This was chosen to guide the user and minimize
-confusion. Next is a methods that support the transformation of a list images to a usable string:
+confusion. Next is a method that supports the transformation of a list images to a usable string:
 `writeListToFiles`. This allows the user to save the images they've selected by ensuring that the
 images are referenced in the appropriate way.
 
@@ -97,20 +98,33 @@ needs to keep track of.
 `getNextPair` is an important method that is used to retrieve the next set of images whether that
  be from the current `Round` or from the next: the `Round` of winners. In order for files to
  be added to the winners `Round`, they must be passed into the `selected` method. This method is
- called with the user has selected either the Right, Left, or Both button. Only files that have
+ called when the user has selected either the Right, Left, or Both button. Only files that have
  been passed into this method will be seen again in the subsequent `Round`. `getNewFiles` is called
- in response to the selection of the Different Pics button. This method added the passed images
- back into the current `Round` and selected two new images. If there are no other images left in
+ in response to the selection of the Different Pics button. This method adds the passed images
+ back into the current `Round` and selects two new images. If there are no other images left in
  the `Round`, one or both of the passed images may occur again immediately because there are no
  different options.  
 
 Throughout this whole process, the `delta` variable is used to determine if the user has interacted
-with/changed anything, indicating to the program if progress has been made to determine its nexts
+with/changed anything, indicating to the program if progress has been made to determine its next
 action(s).
 
 `Bracket` does not keep references to any images, instead handing them directly from the current
 `Round` to the Window. This approach was chosen to allow the code to handle and access images
-easily in response to an updated `List` of images.
+easily in response to an updated `List` of images and prevents excess memory being used storing 
+references to images the user is no longer interested in. 
+
+Memory management was a major consideration in the development of this project. On the first 
+round, it often takes a long time to load in images (especially large ones) since the entire 
+file needs to be read into memory. This results in the program easily using multiple gigabytes 
+of memory after the first round. However, after this, the memory usage declines as images are 
+selected and displaying images becomes much faster. This was a middle ground between spending 
+several minutes at the start loading every image into the program and resulting in at a maximum 
+having every selected photo in memory and only loading the images when they were displayed to 
+the user. Worst-case memory usage is if the user eliminates no photos in the first round, 
+best-case is if the user eliminates half of images, resulting in at least 50% + 1 images being in 
+memory. Worst-case performance happens during the entire first round but only a few seconds lag 
+per image, after that has very good performance.
 
 Overall, the structure of `Bracket` was chosen to maximize efficiency and simplicity. Because of
 this structure, the amount of
@@ -130,7 +144,7 @@ This class includes many of the same methods as the `Bracket` class (such as `ad
 to know where the user is in the `Round` and what need to be done next. While each method differs
 from those in `Bracket`, they bear the same name to indicate the similar outcome. These methods
 refer to the uploaded images themselves while `Bracket`'s version of these methods refer to the
-`Round`. `getFiles` returns a copt the list of images. This is done in order to protect the
+`Round`. `getFiles` returns a copy of the list of images. This is done in order to protect the
 original list of images and to avoid any issues with referencing images.
 
 This approach was chosen because it seemed to be the simplest way to store images. Lists allow
