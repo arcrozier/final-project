@@ -26,13 +26,14 @@ save the remaining images to a folder on their computer, upload more photos to c
 exit the app.
 
 ## Introductory Video
-Click [here]() for a 5 minute video that walks through this app.
+Click [here](https://www.loom.com/share/83f109343bd84145b97ad81c72b39da0?sharedAppSource=team_library)
+for a 5 minute video that walks through this app.
 
 ## Using Photo Bracket
 
 ### Getting Started
-To begin the user should compile and run Main. From there, a separate window will appear where
-users can interact with the app. First, the **Find files** button should be clicked. This will
+To begin the user should compile all files and run `Main`. A separate window will appear
+where users can interact with the app. First, the **Find files** button must be clicked. This will
 prompt the user to select images from their computer. The users will only be allowed to choose
 jpeg, jpg, gif, tiff, tif or png files. Sorting will not begin until at least two photos have
 been uploaded. Once this condition is met, the program will automatically being the sorting
@@ -43,12 +44,16 @@ Sorting begins with the program displaying two random images uploaded by the use
 the user has four options. They must select one of the four buttons found at the bottom of the
 window. These buttons are **Left**, **Both**, **Different Pics**, and **Right**. The user should
 select:
-* **Left** if they prefer the image on the left side of the window;
-* **Right** if they prefer the image on the right side of the window;
-* **Both** if they want both images to advance to the next round or;
+* **Left** if they prefer the image on the left side of the window. This can also be accomplished
+ by selecting the left arrow key on the keyboard;
+* **Right** if they prefer the image on the right side of the window. This can also be accomplished
+ by selecting the right arrow key on the keyboard;
+* **Both** if they want both images to advance to the next round or.  This can also be accomplished
+ by selecting the up arrow key on the keyboard;
 * **Different pics** if they would like to not compare these images and instead choose between
-different images. This action will not eliminate the images, but will add them back to the list
-of images for the current round and present them later to be compared to different images.
+ different images. This action will not eliminate the images, but will add them back to the list
+ of images for the current round and present them later to be compared to different images. This can
+ also be accomplished by selecting the down arrow key on the keyboard;
 
 As a quick feedback message, a green box will appear around the chosen images. The user will be
 asked to sort through all uploaded images as the first round. Subsequent rounds will ask the user
