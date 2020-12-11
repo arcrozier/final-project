@@ -2,7 +2,10 @@ We gained a lot of knowledge from this project. First and foremost, we experienc
 code collaboration first-hand. There were a few occasions in which a team member needed to utilize
 a portion of the other's code but was unsure of where to find this code. This taught us the
 importance of communication and thorough commenting. In relation to the coding itself, we learned
-about swing and implementing an interactive user interface.
+about swing and implementing an interactive user interface. Further, when testing, we realized the 
+differences in the ways that different operating systems handle packages. With more time, we would
+ensure that this project is fully functional across operating systems, choose the most graphically 
+similar images to be compared every time, add background music, and polish the UI.
 
 Overall, this project as a whole was an enjoyable experience. Being able to work with someone to
 create an idea and actually coming together and creating a functioning product was really exciting
