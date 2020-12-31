@@ -24,9 +24,7 @@ public class ImageFile extends File {
      */
     public ImageFile(String fileName) {
         super(fileName);
-        image = null;
-        imageIcon = null;
-        dimensions = new Dimension(0, 0);
+        flush();
     }
 
     /**
@@ -49,13 +47,32 @@ public class ImageFile extends File {
     public ImageIcon getIcon(Dimension size) throws IOException {
         if (dimensions.equals(size)) return imageIcon;
         dimensions = size;
-        if (image == null) image = ImageIO.read(this);
+        load();
         double scale = getScaleFactorToFit(new Dimension(image.getWidth(), image.getHeight())
                 , size);
         // height -1 signals that the height should be whatever keeps the aspect ratio
         return imageIcon =
                 new ImageIcon(image.getScaledInstance((int) (image.getWidth() * scale),
                         -1, Image.SCALE_SMOOTH));
+    }
+
+    /**
+     * Clears the image from memory
+     */
+    public void flush() {
+        if (image != null) image.flush();
+        image = null;
+        imageIcon = null;
+        dimensions = new Dimension(0, 0);
+    }
+
+    /**
+     * Loads the image into memory
+     * @throws IOException  - If image isn't found
+     */
+    public void load() throws IOException {
+        if (image == null) image = ImageIO.read(this);
+
     }
 
     /**

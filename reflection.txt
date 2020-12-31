@@ -4,13 +4,13 @@ a portion of the other's code but was unsure of where to find this code. This ta
 importance of communication and thorough commenting. In relation to the coding itself, we learned
 about swing and implementing an interactive user interface. Further, when testing, we realized the 
 differences in the ways that different operating systems handle packages. Going forward, we would
-ensure that this project is fully functional across operating systems and IDEs, choose the most 
-graphically similar images to be compared every time, add background music, and polish the UI.
+choose the most graphically similar images to be compared every time, add background music, and
+polish the UI.
 
 Overall, this project as a whole was an enjoyable experience. Being able to work with someone to
 create an idea and actually coming together and creating a functioning product was really exciting
 and rewarding. While fun, there were a few pain points during the development process. It was
-frustrating to debug our code. After our app was working and intractable, we struggled to pinpoint
+frustrating to debug our code. After our app was working and interactive, we struggled to pinpoint
 the exact location of a few bugs which proved to be time consuming and mentally draining. However,
-we were able to preserver and complete the product we were happy with. We found that working with a
+we were able to persevere and complete the product we were happy with. We found that working with a
 partner and exploring/learning existing packages was extremely beneficial to our learning.

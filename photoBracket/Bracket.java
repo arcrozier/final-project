@@ -1,6 +1,8 @@
 package photoBracket;
 
+import java.io.IOException;
 import java.util.*;
+import java.util.logging.Logger;
 
 public class Bracket {
 
@@ -118,6 +120,23 @@ public class Bracket {
     }
 
     /**
+     * Removes all images in the bracket from memory
+     */
+    public void flushAll() {
+        currentRound.flushAll();
+        if (currentRound.winners != null) currentRound.winners.flushAll();
+    }
+
+    /**
+     * Loads all images in the bracket into memory
+     */
+    public void loadAll(Window.LoadProgress callback) {
+        if (currentRound.loadAll(callback)) return;
+        if (currentRound.winners != null && currentRound.winners.loadAll(callback)) return;
+        callback.onComplete();
+    }
+
+    /**
      * Gets the image files in the current round
      *
      * @return - A list of all image files in the current round
@@ -149,6 +168,15 @@ public class Bracket {
      * @return  - The number of photos remaining in this round
      */
     public int getRoundSize() {
+        return currentRound.getSize();
+    }
+
+    /**
+     * Provides the total number of images in the bracket
+     * @return    - The number of images in both the current round and the winner round
+     */
+    public int size() {
+        if (currentRound.winners != null) return currentRound.getSize() + currentRound.winners.getSize();
         return currentRound.getSize();
     }
 
@@ -244,6 +272,34 @@ public class Bracket {
         public void add(ImageFile file) {
             files.add(file);
             if (winners == null) winners = new Round();
+        }
+
+        /**
+         * Clears all images from memory
+         */
+        public void flushAll() {
+            for (ImageFile file: files) {
+                file.flush();
+            }
+        }
+
+        /**
+         * Loads all images into memory
+         *
+         * @return - True if the operation was interrupted, false otherwise
+         */
+        public boolean loadAll(Window.LoadProgress callback) {
+            for (ImageFile file: files) {
+                try {
+                    file.load();
+                    callback.onImageLoaded();
+                } catch (IOException e) {
+                    callback.onImageLoadError(e);
+                    Logger.getLogger(getClass().getName()).warning("Unable to find file " + file.getAbsolutePath());
+                }
+                if (Thread.interrupted()) return true;
+            }
+            return false;
         }
 
         /**

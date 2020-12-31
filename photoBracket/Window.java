@@ -25,6 +25,15 @@ class Window implements ComponentListener, WindowListener {
     private final File preferences;
     private final JLabel rounds;
     private final JLabel pics;
+    private final JButton left;
+    private final JButton right;
+    private final JButton both;
+    private final JButton neither;
+    private final JRadioButtonMenuItem loadFirst;
+    private final JRadioButtonMenuItem balanced;
+    private final JRadioButtonMenuItem memSaver;
+
+    private JRadioButtonMenuItem lastSelected;
 
     // all settings
     private Map<String, String> settings;
@@ -52,6 +61,10 @@ class Window implements ComponentListener, WindowListener {
 
     // the name of the setting for the directory to open the file chooser at
     private static final String PREFERENCE_DEFAULT_DIR = "default directory";
+    private static final String PREFERENCE_LOAD_TYPE = "load type";
+    private static final String LOAD_TYPE_FIRST = "first";
+    private static final String LOAD_TYPE_BALANCED = "balanced";
+    private static final String LOAD_TYPE_MEM_SAVER = "memory saver";
 
     // the delay for highlighting the selected image(s) in milliseconds
     private static final int ANIMATION_DELAY = 500;
@@ -61,6 +74,16 @@ class Window implements ComponentListener, WindowListener {
 
     // the color to use when highlighting the selected image(s)
     private static final Color SELECTED_COLOR = new Color(47, 191, 41);
+
+    // gets updates on the progress of loading images
+    interface LoadProgress {
+
+        void onImageLoaded();
+
+        void onImageLoadError(Exception e);
+
+        void onComplete();
+    }
 
     /**
      * Initialize and show a new GUI window
@@ -123,11 +146,72 @@ class Window implements ComponentListener, WindowListener {
         fileMenu.add(exportFavorites);
         fileMenu.add(clearFavorites);
 
+        JMenu prefMenu = new JMenu("Preferences");
+        ButtonGroup group = new ButtonGroup();
+        loadFirst = new JRadioButtonMenuItem("Load all first");
+        balanced = new JRadioButtonMenuItem("Balanced (default");
+        memSaver = new JRadioButtonMenuItem("Memory saver");
+
+        ItemListener onLoadPrefChanged = new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                if (e.getStateChange() == ItemEvent.DESELECTED) {
+                    lastSelected = (JRadioButtonMenuItem) e.getSource();
+                    return;
+                }
+                if (e.getSource() == loadFirst) {
+                    settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_FIRST);
+                    loadImages();
+                }
+                else if (e.getSource() == balanced) {
+                    settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_BALANCED);
+                }
+                else if (e.getSource() == memSaver) {
+                    settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_MEM_SAVER);
+                    bracket.flushAll();
+                }
+                else Logger.getLogger(getClass().getName()).warning("Source " + e.getSource() +
+                            " did not match a menu item. Is there a bug?");
+            }
+        };
+
+        if (settings.containsKey(PREFERENCE_LOAD_TYPE)) {
+            switch (settings.get(PREFERENCE_LOAD_TYPE)) {
+                case LOAD_TYPE_FIRST:
+                    loadFirst.setSelected(true);
+                    break;
+                case LOAD_TYPE_BALANCED:
+                    balanced.setSelected(true);
+                    break;
+                case LOAD_TYPE_MEM_SAVER:
+                    memSaver.setSelected(true);
+            }
+        } else {
+            balanced.setSelected(true);
+            settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_BALANCED);
+        }
+        loadFirst.addItemListener(onLoadPrefChanged);
+        balanced.addItemListener(onLoadPrefChanged);
+        memSaver.addItemListener(onLoadPrefChanged);
+
+        group.add(loadFirst);
+        group.add(balanced);
+        group.add(memSaver);
+        prefMenu.add(loadFirst);
+        prefMenu.add(balanced);
+        prefMenu.add(memSaver);
+
         menuBar.add(fileMenu);
+        menuBar.add(prefMenu);
         frame.setJMenuBar(menuBar);
 
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.BOTH;
+
+        left = new JButton("Left");
+        right = new JButton("Right");
+        both = new JButton("Both");
+        neither = new JButton("Different pics");
 
         JPanel buttons = makeButtonPanel();
 
@@ -163,6 +247,17 @@ class Window implements ComponentListener, WindowListener {
 
         favorites = new File(".favorites");
 
+    }
+
+    private void loadImages() {
+        enableUI(false);
+        final ProgressMonitor monitor = new ProgressMonitor(frame, "Loading images", "0/" +
+                bracket.size(), 0, bracket.size());
+        frame.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+        monitor.setMillisToPopup(1000);
+        monitor.setMillisToDecideToPopup(250);
+        ImageLoader loader = new ImageLoader(monitor);
+        loader.execute();
     }
 
     /**
@@ -285,9 +380,11 @@ class Window implements ComponentListener, WindowListener {
         if (result == JFileChooser.APPROVE_OPTION) {
             if (reset) {
                 images[0] = images[1] = null;
-                setBracket(new Bracket());
+                bracket = new Bracket();
             }
             bracket.add(ImageFile.toImageFiles(fileChooser.getSelectedFiles()));
+            if (settings.containsKey(PREFERENCE_LOAD_TYPE) &&
+                    settings.get(PREFERENCE_LOAD_TYPE).equals(LOAD_TYPE_FIRST)) loadImages();
         }
         if (images[0] == null || images[1] == null) populate(bracket);
     }
@@ -306,45 +403,40 @@ class Window implements ComponentListener, WindowListener {
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0, false), KEY_UP);
         inputMap.put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0, false), KEY_DOWN);
 
-        actionMap.put(KEY_LEFT, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                animateLeft();
-            }
-        });
-        actionMap.put(KEY_RIGHT, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                animateRight();
-            }
-        });
-        actionMap.put(KEY_UP, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                animateBoth();
-            }
-        });
-        actionMap.put(KEY_DOWN, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                newPics();
-            }
-        });
-
         GridBagConstraints buttonConstraints = new GridBagConstraints();
         buttonConstraints.fill = GridBagConstraints.NONE;
         buttonConstraints.gridy = 0;
         buttonConstraints.gridx = 0;
 
-        JButton left = new JButton("Left");
-        JButton right = new JButton("Right");
-        JButton both = new JButton("Both");
-        JButton neither = new JButton("Different pics");
-
         left.addActionListener(e -> animateLeft());
         right.addActionListener(e -> animateRight());
         both.addActionListener(e -> animateBoth());
         neither.addActionListener(e -> newPics());
+
+        actionMap.put(KEY_LEFT, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                left.doClick();
+            }
+        });
+        actionMap.put(KEY_RIGHT, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                right.doClick();
+            }
+        });
+        actionMap.put(KEY_UP, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                both.doClick();
+            }
+        });
+        actionMap.put(KEY_DOWN, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                neither.doClick();
+            }
+        });
 
         JLabel roundsLabel = new JLabel("Rounds Completed:");
         JLabel picsLabel = new JLabel("Pictures Remaining in this Round:");
@@ -358,6 +450,17 @@ class Window implements ComponentListener, WindowListener {
         buttons.setBorder(BorderFactory.createEtchedBorder());
 
         return buttons;
+    }
+
+    /**
+     * Enables and disables user input for the frame
+     *
+     * @param enabled   - Whether the frame should accept user input
+     */
+    private void enableUI(boolean enabled) {
+        for (JButton button : Arrays.asList(left, right, both, neither)) {
+            button.setEnabled(enabled);
+        }
     }
 
     /**
@@ -439,6 +542,9 @@ class Window implements ComponentListener, WindowListener {
     private void updatePanel() {
         if (bracket.hasNextPair()) {
             images = bracket.getNextPair();
+            if (settings.containsKey(PREFERENCE_LOAD_TYPE)
+                    && settings.get(PREFERENCE_LOAD_TYPE).equals(LOAD_TYPE_MEM_SAVER))
+                bracket.flushAll();
             rounds.setText(Integer.toString(bracket.getRoundCount()));
             pics.setText(Integer.toString(bracket.getRoundSize()));
             refreshPics();
@@ -532,6 +638,11 @@ class Window implements ComponentListener, WindowListener {
         }
     }
 
+    /**
+     * Helper method that shows an error dialog with a list of errors
+     * @param failed            - The list of errors
+     * @param messageBuilder    - The message to display with the errors
+     */
     private void showExportError(List<String> failed, StringBuilder messageBuilder) {
         messageBuilder.append(failed.size());
         messageBuilder.append("):");
@@ -763,6 +874,64 @@ class Window implements ComponentListener, WindowListener {
         @Override
         public String getDescription() {
             return "Images (.jpeg, .jpg, .gif, .tiff, .tif, .png)";
+        }
+    }
+
+    private class ImageLoader extends SwingWorker<Void, Integer> {
+
+        private final ProgressMonitor monitor;
+
+        public ImageLoader(ProgressMonitor monitor) {
+            this.monitor = monitor;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            LoadProgress callback = new LoadProgress() {
+                private int complete = 0;
+
+                @Override
+                public void onImageLoaded() {
+                    complete++;
+                    if (monitor.isCanceled()) {
+                        cancel(true);
+                        if (lastSelected != null) lastSelected.setSelected(true);
+                        done();
+                        return;
+                    }
+                    publish(complete);
+                }
+
+                @Override
+                public void onImageLoadError(Exception e) {
+                    Logger.getLogger(getClass().getName()).warning("Error loading image: " + e);
+                    onImageLoaded();
+                }
+
+                @Override
+                public void onComplete() {
+                    done();
+                }
+            };
+
+            bracket.loadAll(callback);
+
+            return null;
+        }
+
+        @Override
+        protected void process(List<Integer> completes) {
+            int complete = completes.get(completes.size() - 1);
+            monitor.setProgress(complete);
+            monitor.setNote(complete + "/" + monitor.getMaximum());
+        }
+
+        @Override
+        protected void done() {
+            if (!monitor.isCanceled()) monitor.close();
+            enableUI(true);
+            frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+            lastSelected = null;
         }
     }
 }
