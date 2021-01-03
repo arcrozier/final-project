@@ -25,10 +25,12 @@ class Window implements ComponentListener, WindowListener {
     private final File preferences;
     private final JLabel rounds;
     private final JLabel pics;
+    private final JLabel total;
     private final JButton left;
     private final JButton right;
     private final JButton both;
     private final JButton neither;
+    private final JButton dumpUnreadable;
     private final JRadioButtonMenuItem loadFirst;
     private final JRadioButtonMenuItem balanced;
     private final JRadioButtonMenuItem memSaver;
@@ -126,6 +128,7 @@ class Window implements ComponentListener, WindowListener {
 
         rounds = new JLabel();
         pics = new JLabel();
+        total = new JLabel();
 
         frame = new JFrame("Photo Bracket");
         frame.setMinimumSize(new Dimension(600, 600));
@@ -218,6 +221,7 @@ class Window implements ComponentListener, WindowListener {
         right = new JButton("Right");
         both = new JButton("Both");
         neither = new JButton("Different pics");
+        dumpUnreadable = new JButton("Ignore unreadable images");
 
         JPanel buttons = makeButtonPanel();
 
@@ -279,15 +283,14 @@ class Window implements ComponentListener, WindowListener {
     }
 
     /**
-     * Refreshes the picture view - used for when the photos update (probably outside of direct
-     * user interaction, e.i. user selecting left/right/both/neither don't need this since that
-     * can update the photos directly)
+     * Refreshes the picture view - used for when the photos update
      */
     private void refreshPics() {
+        refreshCounters();
         Dimension maxSize = setPicPanelSize();
-        leftPic.setText(null);
-        rightPic.setText(null);
         if (images[0] == null || images[1] == null) {
+            leftPic.setText(null);
+            rightPic.setText(null);
             leftPic.setIcon(null);
             rightPic.setIcon(null);
             return;
@@ -298,6 +301,18 @@ class Window implements ComponentListener, WindowListener {
         loader.execute();
     }
 
+    /**
+     * Helper method to update the numerical counters that show information about the bracket
+     */
+    private void refreshCounters() {
+        total.setText(Integer.toString(bracket.size()));
+        rounds.setText(Integer.toString(bracket.getRoundCount()));
+        pics.setText(Integer.toString(bracket.getRoundSize()));
+    }
+
+    /**
+     * Helper method that updates the panels that contain the images
+     */
     private void updatePicSize() {
         Dimension maxSize = setPicPanelSize();
         if (images[0] == null || images[1] == null) return;
@@ -392,6 +407,7 @@ class Window implements ComponentListener, WindowListener {
                 bracket = new Bracket();
             }
             bracket.add(ImageFile.toImageFiles(fileChooser.getSelectedFiles()));
+            refreshCounters();
             if (settings.containsKey(PREFERENCE_LOAD_TYPE) &&
                     settings.get(PREFERENCE_LOAD_TYPE).equals(LOAD_TYPE_FIRST)) loadImages();
         }
@@ -421,6 +437,9 @@ class Window implements ComponentListener, WindowListener {
         right.addActionListener(e -> animateRight());
         both.addActionListener(e -> animateBoth());
         neither.addActionListener(e -> newPics());
+        // todo dumpUnreadable
+
+        dumpUnreadable.setVisible(false);
 
         actionMap.put(KEY_LEFT, new AbstractAction() {
             @Override
@@ -447,11 +466,12 @@ class Window implements ComponentListener, WindowListener {
             }
         });
 
-        JLabel roundsLabel = new JLabel("Rounds Completed:");
-        JLabel picsLabel = new JLabel("Pictures Remaining in this Round:");
+        JLabel roundsLabel = new JLabel("Rounds completed:");
+        JLabel picsLabel = new JLabel("Pictures remaining in this round:");
+        JLabel totalLabel = new JLabel("Total pictures in bracket: ");
 
-        for (Component component : Arrays.asList(left, both, neither, right, roundsLabel, rounds,
-                picsLabel, pics)) {
+        for (Component component : Arrays.asList(dumpUnreadable, left, both, neither, right,
+                roundsLabel, rounds, picsLabel, pics, totalLabel, total)) {
             buttons.add(component, buttonConstraints);
             buttonConstraints.gridx += 1;
         }
@@ -551,13 +571,12 @@ class Window implements ComponentListener, WindowListener {
     private void updatePanel() {
         images = bracket.getNextPair();
         refreshPics();
-        if (images[0] == null || images[1] == null) {
+        if (images[0] != null && images[1] != null) {
             loadingPics();
             if (settings.containsKey(PREFERENCE_LOAD_TYPE)
                     && settings.get(PREFERENCE_LOAD_TYPE).equals(LOAD_TYPE_MEM_SAVER))
                 bracket.flushAll();
-            rounds.setText(Integer.toString(bracket.getRoundCount()));
-            pics.setText(Integer.toString(bracket.getRoundSize()));
+            refreshCounters();
         } else {
             done();
         }
@@ -716,7 +735,6 @@ class Window implements ComponentListener, WindowListener {
                 done();
             }
         } else { // continues sorting
-            newPics();
             bracket.ignoreDone();
             if (!bracket.hasNextPair()) contentLayout.show(contentPanel, PROMPT_PANEL);
             else updatePanel();
@@ -954,7 +972,7 @@ class Window implements ComponentListener, WindowListener {
         protected Void doInBackground() {
             ImageIcon icon;
             try {
-                icon = images[0].getIcon(maxSize);
+                icon = images[0].getIcon(maxSize); // todo load in own thread
                 leftPic.setIcon(icon);
                 if (icon == null)
                     leftPic.setText(String.format(IMG_CORRUPTED, images[0].getCanonicalPath()));
@@ -966,7 +984,7 @@ class Window implements ComponentListener, WindowListener {
                 leftPic.setText(String.format(IMG_NOT_FOUND, images[0].getAbsolutePath()));
             }
             try {
-                icon = images[1].getIcon(maxSize);
+                icon = images[1].getIcon(maxSize); // todo load in own thread
                 rightPic.setIcon(icon);
                 if (icon == null)
                     rightPic.setText(String.format(IMG_CORRUPTED, images[0].getCanonicalPath()));

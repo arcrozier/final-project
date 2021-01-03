@@ -200,7 +200,7 @@ public class Bracket {
      */
     private static class Round {
 
-        private final NavigableSet<ImageFile> files;
+        private final Deque<ImageFile> files;
         // this is guaranteed not null if a round has files in it (i.e. if isEmpty() returns false, this won't be null)
         public Round winners;
         private final Stack<RoundAction> undoHistory;
@@ -215,12 +215,12 @@ public class Bracket {
             undoHistory = new Stack<>();
             redoHistory = new Stack<>();
             if (files == null) {
-                this.files = new TreeSet<>();
+                this.files = new LinkedListHashSet<>();
                 winners = null;
             }
             // One can also do comparisons here but this is probably not the most efficient
             else {
-                this.files = new TreeSet<>(Arrays.asList(files));
+                this.files = new LinkedListHashSet<>(Arrays.asList(files));
                 // Creates a round for the winners - careful with a recursive infinite loop here
                 if (files.length > 0) winners = new Round();
             }
@@ -241,7 +241,7 @@ public class Bracket {
          */
         public ImageFile[] getNextPair() {
             if (files.size() < 2) {
-                return null;
+                return new ImageFile[2];
             }
             // avoids repeatedly showing the user the same two files by pulling one from the
             // front and one from the back
