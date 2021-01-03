@@ -176,7 +176,8 @@ public class Bracket {
      * @return    - The number of images in both the current round and the winner round
      */
     public int size() {
-        if (currentRound.winners != null) return currentRound.getSize() + currentRound.winners.getSize();
+        if (currentRound.winners != null)
+            return currentRound.getSize() + currentRound.winners.getSize();
         return currentRound.getSize();
     }
 
@@ -199,7 +200,7 @@ public class Bracket {
      */
     private static class Round {
 
-        private final List<ImageFile> files;
+        private final NavigableSet<ImageFile> files;
         // this is guaranteed not null if a round has files in it (i.e. if isEmpty() returns false, this won't be null)
         public Round winners;
         private final Stack<RoundAction> undoHistory;
@@ -214,12 +215,12 @@ public class Bracket {
             undoHistory = new Stack<>();
             redoHistory = new Stack<>();
             if (files == null) {
-                this.files = new ArrayList<>();
+                this.files = new TreeSet<>();
                 winners = null;
             }
             // One can also do comparisons here but this is probably not the most efficient
             else {
-                this.files = new ArrayList<>(Arrays.asList(files));
+                this.files = new TreeSet<>(Arrays.asList(files));
                 // Creates a round for the winners - careful with a recursive infinite loop here
                 if (files.length > 0) winners = new Round();
             }
@@ -245,8 +246,8 @@ public class Bracket {
             // avoids repeatedly showing the user the same two files by pulling one from the
             // front and one from the back
             ImageFile[] pair = new ImageFile[2];
-            pair[0] = files.remove(0);
-            pair[1] = files.remove(files.size() - 1);
+            pair[0] = files.pollFirst();
+            pair[1] = files.pollLast();
             return pair;
         }
 
@@ -257,7 +258,7 @@ public class Bracket {
          */
         public ImageFile getNextImage() {
             if (!files.isEmpty()) {
-                return files.remove(files.size() - 1);
+                return files.pollFirst();
             }
             return null;
         }
