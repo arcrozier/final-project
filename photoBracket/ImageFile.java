@@ -40,16 +40,29 @@ public class ImageFile extends File {
      * Gets an image that can be set to a JPanel/JLabel to display the image
      *
      * @param size - The size of the container the image will be in
-     * @return - The ImageIcon that can be used with JLabel.setIcon()
+     * @return - The ImageIcon that can be used with JLabel.setIcon() and null if the file is not
+     * an image
      * @throws IOException          - If there's an error reading the file
-     * @throws NullPointerException - If the file isn't an image or is corrupted
      */
     public ImageIcon getIcon(Dimension size) throws IOException {
         if (dimensions.equals(size)) return imageIcon;
-        dimensions = size;
         load();
-        double scale = getScaleFactorToFit(new Dimension(image.getWidth(), image.getHeight())
-                , size);
+        return getScaledIcon(size);
+    }
+
+    /**
+     * Provides a scaled version of the image but will not load it from disk so it will not throw
+     * any exceptions
+     *
+     * @param size  - The dimensions the icon should fit within
+     * @return      - A scaled version of the icon
+     */
+    public ImageIcon getScaledIcon(Dimension size) {
+        if (dimensions.equals(size)) return imageIcon;
+        if (image == null) return null;
+        dimensions = size;
+        double scale = getScaleFactorToFit(new Dimension(image.getWidth(), image.getHeight()),
+                size);
         // height -1 signals that the height should be whatever keeps the aspect ratio
         return imageIcon =
                 new ImageIcon(image.getScaledInstance((int) (image.getWidth() * scale),

@@ -55,6 +55,12 @@ class Window implements ComponentListener, WindowListener {
     private static final String KEY_UP = "UP";
     private static final String KEY_DOWN = "DOWN";
 
+    private static final String PLACEHOLDER = "Loading...";
+    private static final String IMG_CORRUPTED = "Unable to read %s - file may be corrupted or not" +
+            " a recognized image format";
+    private static final String IMG_NOT_FOUND = "An error occurred loading %s. Check the file " +
+            "exists";
+
     // the names for each panel in contentLayout
     private static final String PROMPT_PANEL = "prompt";
     private static final String PIC_PANEL = "pics";
@@ -235,12 +241,15 @@ class Window implements ComponentListener, WindowListener {
 
         frame.add(contentPanel, topPanelConstraints);
 
-        populate(bracket);
+        populate();
         constraints.gridx = 0;
         constraints.weighty = 0;
         constraints.gridy = 1;
         constraints.insets = new Insets(10, 50, 10, 50);
         frame.add(buttons, constraints);
+
+        setPicPanelSize();
+
         frame.setVisible(true);
         frame.addComponentListener(this);
         frame.addWindowListener(this);
@@ -260,45 +269,40 @@ class Window implements ComponentListener, WindowListener {
         loader.execute();
     }
 
+    private Dimension setPicPanelSize() {
+        Dimension panelSize = leftPic.getParent().getSize();
+        Dimension maxSize = new Dimension((int) (panelSize.width / 2 - PAD * 1.5),
+                (int) (panelSize.height - PAD * 1.5));
+        leftPic.setPreferredSize(maxSize);
+        rightPic.setPreferredSize(maxSize);
+        return maxSize;
+    }
+
     /**
      * Refreshes the picture view - used for when the photos update (probably outside of direct
      * user interaction, e.i. user selecting left/right/both/neither don't need this since that
      * can update the photos directly)
      */
     private void refreshPics() {
-        if (images[0] == null || images[1] == null) return;
-        int which = 0;
-        Dimension panelSize = leftPic.getParent().getSize();
-        Dimension maxSize = new Dimension((int) (panelSize.width / 2 - PAD * 1.5),
-                (int) (panelSize.height - PAD * 1.5));
-        leftPic.setPreferredSize(maxSize);
-        rightPic.setPreferredSize(maxSize);
+        Dimension maxSize = setPicPanelSize();
+        leftPic.setText(null);
+        rightPic.setText(null);
+        if (images[0] == null || images[1] == null) {
+            leftPic.setIcon(null);
+            rightPic.setIcon(null);
+            return;
+        }
+        enableUI(false);
+        ImagePairLoader loader = new ImagePairLoader(maxSize);
 
-        try {
-            leftPic.setIcon(images[0].getIcon(maxSize));
-            which += 1;
-        } catch (IOException | NullPointerException e) {
-            Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
-                    "occurred while loading left image: " + images[0].toString());
-        }
-        try {
-            rightPic.setIcon(images[1].getIcon(maxSize));
-            which += 2;
-        } catch (IOException | NullPointerException e) {
-            Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
-                    "occurred while loading right image: " + images[1].toString());
-        }
-        switch (which) {
-            case 0: // both failed
-                updatePanel();
-                break;
-            case 1: // right failed
-                leftChosen();
-                break;
-            case 2: // left failed
-                rightChosen();
-                break;
-        } // do nothing if which == 3, since that would be both successful
+        loader.execute();
+    }
+
+    private void updatePicSize() {
+        Dimension maxSize = setPicPanelSize();
+        if (images[0] == null || images[1] == null) return;
+        leftPic.setIcon(images[0].getScaledIcon(maxSize));
+        rightPic.setIcon(images[1].getScaledIcon(maxSize));
     }
 
     /**
@@ -311,8 +315,13 @@ class Window implements ComponentListener, WindowListener {
         JPanel pictures = new JPanel();
         SpringLayout layout = new SpringLayout();
         pictures.setLayout(layout);
-        leftPic = new JLabel();
-        rightPic = new JLabel();
+        leftPic = new JLabel(PLACEHOLDER);
+        rightPic = new JLabel(PLACEHOLDER);
+
+        leftPic.setHorizontalAlignment(JLabel.CENTER);
+        leftPic.setVerticalAlignment(JLabel.CENTER);
+        rightPic.setHorizontalAlignment(JLabel.CENTER);
+        rightPic.setVerticalAlignment(JLabel.CENTER);
 
         pictures.add(leftPic);
         pictures.add(rightPic);
@@ -386,7 +395,7 @@ class Window implements ComponentListener, WindowListener {
             if (settings.containsKey(PREFERENCE_LOAD_TYPE) &&
                     settings.get(PREFERENCE_LOAD_TYPE).equals(LOAD_TYPE_FIRST)) loadImages();
         }
-        if (images[0] == null || images[1] == null) populate(bracket);
+        if (images[0] == null || images[1] == null) populate();
     }
 
     /**
@@ -540,29 +549,35 @@ class Window implements ComponentListener, WindowListener {
      * Helper method that updates the panel based on the button selected
      */
     private void updatePanel() {
-        if (bracket.hasNextPair()) {
-            images = bracket.getNextPair();
+        images = bracket.getNextPair();
+        refreshPics();
+        if (images[0] == null || images[1] == null) {
+            loadingPics();
             if (settings.containsKey(PREFERENCE_LOAD_TYPE)
                     && settings.get(PREFERENCE_LOAD_TYPE).equals(LOAD_TYPE_MEM_SAVER))
                 bracket.flushAll();
             rounds.setText(Integer.toString(bracket.getRoundCount()));
             pics.setText(Integer.toString(bracket.getRoundSize()));
-            refreshPics();
         } else {
             done();
         }
+    }
+
+    private void loadingPics() {
+        leftPic.setText(PLACEHOLDER);
+        leftPic.setIcon(null);
+        rightPic.setText(PLACEHOLDER);
+        rightPic.setIcon(null);
     }
 
     /**
      * Populates the window with the next two pictures pulled from the bracket (useful when
      * initializing the window)
      * Updates the bracket at the same time
-     *
-     * @param bracket - The bracket this Window should use
      */
-    void populate(Bracket bracket) {
-        this.bracket = bracket;
+    void populate() {
         if (bracket.hasNextPair()) {
+            loadingPics();
             images = bracket.getNextPair();
             contentLayout.show(contentPanel, PIC_PANEL);
             rounds.setText(Integer.toString(bracket.getRoundCount()));
@@ -572,15 +587,6 @@ class Window implements ComponentListener, WindowListener {
         }
         refreshPics();
         frame.validate();
-    }
-
-    /**
-     * Sets the bracket for this Window
-     *
-     * @param bracket - The bracket to use for choosing files
-     */
-    void setBracket(Bracket bracket) {
-        this.bracket = bracket;
     }
 
     /**
@@ -712,7 +718,8 @@ class Window implements ComponentListener, WindowListener {
         } else { // continues sorting
             newPics();
             bracket.ignoreDone();
-            updatePanel();
+            if (!bracket.hasNextPair()) contentLayout.show(contentPanel, PROMPT_PANEL);
+            else updatePanel();
         }
     }
 
@@ -748,7 +755,7 @@ class Window implements ComponentListener, WindowListener {
      */
     @Override
     public void componentResized(ComponentEvent e) {
-        refreshPics();
+        updatePicSize();
     }
 
     @Override
@@ -932,6 +939,45 @@ class Window implements ComponentListener, WindowListener {
             enableUI(true);
             frame.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             lastSelected = null;
+        }
+    }
+
+    private class ImagePairLoader extends SwingWorker<Void, Void> {
+
+        private final Dimension maxSize;
+
+        public ImagePairLoader(Dimension maxSize) {
+            this.maxSize = maxSize;
+        }
+
+        @Override
+        protected Void doInBackground() {
+            ImageIcon icon;
+            try {
+                icon = images[0].getIcon(maxSize);
+                leftPic.setIcon(icon);
+                if (icon == null)
+                    leftPic.setText(String.format(IMG_CORRUPTED, images[0].getCanonicalPath()));
+                else
+                    leftPic.setText(null);
+            } catch (IOException e) {
+                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
+                        "occurred while loading left image: " + images[0].toString());
+                leftPic.setText(String.format(IMG_NOT_FOUND, images[0].getAbsolutePath()));
+            }
+            try {
+                icon = images[1].getIcon(maxSize);
+                rightPic.setIcon(icon);
+                if (icon == null)
+                    rightPic.setText(String.format(IMG_CORRUPTED, images[0].getCanonicalPath()));
+                else rightPic.setText(null);
+            } catch (IOException e) {
+                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
+                        "occurred while loading right image: " + images[1].toString());
+                rightPic.setText(String.format(IMG_NOT_FOUND, images[0].getAbsolutePath()));
+            }
+            enableUI(true);
+            return null;
         }
     }
 }
