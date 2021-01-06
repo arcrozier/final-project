@@ -16,6 +16,7 @@ public class ImageFile extends File {
     private Dimension dimensions;
     private BufferedImage image;
     private ImageIcon imageIcon;
+    private boolean unreadable;
 
     /**
      * Constructs a new ImageFile for the provided file path
@@ -26,6 +27,7 @@ public class ImageFile extends File {
     public ImageFile(String fileName) {
         super(fileName);
         flush();
+        unreadable = false;
     }
 
     /**
@@ -48,7 +50,9 @@ public class ImageFile extends File {
     public ImageIcon getIcon(Dimension size) throws IOException {
         if (dimensions.equals(size)) return imageIcon;
         load();
-        return getScaledIcon(size);
+        ImageIcon icon = getScaledIcon(size);
+        unreadable = icon == null;
+        return icon;
     }
 
     /**
@@ -85,7 +89,12 @@ public class ImageFile extends File {
      * @throws IOException  - If image isn't found
      */
     public void load() throws IOException {
-        if (image == null) image = ImageIO.read(this);
+        try {
+            if (image == null) image = ImageIO.read(this);
+        } catch (IOException e) {
+            unreadable = true;
+            throw e;
+        }
 
     }
 
@@ -97,6 +106,16 @@ public class ImageFile extends File {
     @Override
     public String toString() {
         return getAbsolutePath();
+    }
+
+    /**
+     * Whether or not the file is unreadable (whether because it doesn't exist or is corrupted or
+     * isn't an image or whatever)
+     *
+     * @return  - True if the image cannot be read, false if it can
+     */
+    public boolean isUnreadable() {
+        return unreadable;
     }
 
     /**
