@@ -6,7 +6,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Comparator;
 
 /**
  * A utility class that represents an image file for displaying
@@ -40,12 +39,26 @@ public class ImageFile extends File {
     }
 
     /**
+     * Static helper method that converts an array of Files to an array of ImageFiles
+     *
+     * @param files - The files to be converted
+     * @return - The converted ImageFiles
+     */
+    public static ImageFile[] toImageFiles(File... files) {
+        ImageFile[] imageFiles = new ImageFile[files.length];
+        for (int i = 0; i < files.length; i++) {
+            imageFiles[i] = new ImageFile(files[i]);
+        }
+        return imageFiles;
+    }
+
+    /**
      * Gets an image that can be set to a JPanel/JLabel to display the image
      *
      * @param size - The size of the container the image will be in
      * @return - The ImageIcon that can be used with JLabel.setIcon() and null if the file is not
      * an image
-     * @throws IOException          - If there's an error reading the file
+     * @throws IOException - If there's an error reading the file
      */
     public ImageIcon getIcon(Dimension size) throws IOException {
         if (dimensions.equals(size)) return imageIcon;
@@ -59,8 +72,8 @@ public class ImageFile extends File {
      * Provides a scaled version of the image but will not load it from disk so it will not throw
      * any exceptions
      *
-     * @param size  - The dimensions the icon should fit within
-     * @return      - A scaled version of the icon
+     * @param size - The dimensions the icon should fit within
+     * @return - A scaled version of the icon
      */
     public ImageIcon getScaledIcon(Dimension size) {
         if (dimensions.equals(size)) return imageIcon;
@@ -86,7 +99,8 @@ public class ImageFile extends File {
 
     /**
      * Loads the image into memory
-     * @throws IOException  - If image isn't found
+     *
+     * @throws IOException - If image isn't found
      */
     public void load() throws IOException {
         try {
@@ -112,7 +126,7 @@ public class ImageFile extends File {
      * Whether or not the file is unreadable (whether because it doesn't exist or is corrupted or
      * isn't an image or whatever)
      *
-     * @return  - True if the image cannot be read, false if it can
+     * @return - True if the image cannot be read, false if it can
      */
     public boolean isUnreadable() {
         return unreadable;
@@ -141,19 +155,5 @@ public class ImageFile extends File {
     private double getScaleFactorToFit(Dimension current, Dimension target) {
         return Math.min(getScaleFactor(current.width, target.width),
                 getScaleFactor(current.height, target.height));
-    }
-
-    /**
-     * Static helper method that converts an array of Files to an array of ImageFiles
-     *
-     * @param files - The files to be converted
-     * @return - The converted ImageFiles
-     */
-    public static ImageFile[] toImageFiles(File... files) {
-        ImageFile[] imageFiles = new ImageFile[files.length];
-        for (int i = 0; i < files.length; i++) {
-            imageFiles[i] = new ImageFile(files[i]);
-        }
-        return imageFiles;
     }
 }

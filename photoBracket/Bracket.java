@@ -165,7 +165,7 @@ public class Bracket {
     }
 
     /**
-     * @return  - The number of photos remaining in this round
+     * @return - The number of photos remaining in this round
      */
     public int getRoundSize() {
         return currentRound.getSize();
@@ -173,7 +173,8 @@ public class Bracket {
 
     /**
      * Provides the total number of images in the bracket
-     * @return    - The number of images in both the current round and the winner round
+     *
+     * @return - The number of images in both the current round and the winner round
      */
     public int size() {
         if (currentRound.winners != null)
@@ -201,10 +202,10 @@ public class Bracket {
     private static class Round {
 
         private final Deque<ImageFile> files;
-        // this is guaranteed not null if a round has files in it (i.e. if isEmpty() returns false, this won't be null)
-        public Round winners;
         private final Stack<RoundAction> undoHistory;
         private final Stack<RoundAction> redoHistory;
+        // this is guaranteed not null if a round has files in it (i.e. if isEmpty() returns false, this won't be null)
+        public Round winners;
 
         /**
          * Constructs a new round for the bracket
@@ -279,7 +280,7 @@ public class Bracket {
          * Clears all images from memory
          */
         public void flushAll() {
-            for (ImageFile file: files) {
+            for (ImageFile file : files) {
                 file.flush();
             }
         }
@@ -290,7 +291,7 @@ public class Bracket {
          * @return - True if the operation was interrupted, false otherwise
          */
         public boolean loadAll(Window.LoadProgress callback) {
-            for (ImageFile file: files) {
+            for (ImageFile file : files) {
                 try {
                     file.load();
                     callback.onImageLoaded();
@@ -425,15 +426,8 @@ public class Bracket {
             public final List<ImageFile> listModified;
             public final ImageFile[] filesModified;
             public final int[] indices;
-
-            public enum Action {
-                REMOVE,
-                ADD
-            }
-
             public final Action action;
             public final RoundAction relatedAction;
-
             /**
              * Creates a new action for the round
              *
@@ -452,6 +446,11 @@ public class Bracket {
                 this.indices = index;
                 this.action = action;
                 this.relatedAction = relatedAction;
+            }
+
+            public enum Action {
+                REMOVE,
+                ADD
             }
         }
     }

@@ -1,15 +1,15 @@
 package photoBracket;
 
-import javax.swing.*;
 import javax.swing.Timer;
+import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.*;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
@@ -18,8 +18,33 @@ import java.util.logging.Logger;
  */
 class Window implements ComponentListener, WindowListener {
 
-    private JLabel leftPic;
-    private JLabel rightPic;
+    // map keystrokes to actions
+    private static final String KEY_LEFT = "LEFT";
+    private static final String KEY_RIGHT = "RIGHT";
+    private static final String KEY_UP = "UP";
+    private static final String KEY_DOWN = "DOWN";
+    private static final String PLACEHOLDER = "Loading...";
+    private static final String IMG_CORRUPTED = "Unable to read %s - file may be corrupted or not" +
+            " a recognized image format";
+    private static final String IMG_NOT_FOUND = "An error occurred loading %s. Check the file " +
+            "exists";
+    private static final String ROUND_EMPTY = "There are no more images in this round";
+    // the names for each panel in contentLayout
+    private static final String PROMPT_PANEL = "prompt";
+    private static final String PIC_PANEL = "pics";
+    private static final String CONTINUE_PANEL = "continue";
+    // the name of the setting for the directory to open the file chooser at
+    private static final String PREFERENCE_DEFAULT_DIR = "default directory";
+    private static final String PREFERENCE_LOAD_TYPE = "load type";
+    private static final String LOAD_TYPE_FIRST = "first";
+    private static final String LOAD_TYPE_BALANCED = "balanced";
+    private static final String LOAD_TYPE_MEM_SAVER = "memory saver";
+    // the delay for highlighting the selected image(s) in milliseconds
+    private static final int ANIMATION_DELAY = 500;
+    // the padding around images
+    private static final int PAD = 5;
+    // the color to use when highlighting the selected image(s)
+    private static final Color SELECTED_COLOR = new Color(47, 191, 41);
     private final JFrame frame;
     private final JFileChooser fileChooser;
     private final File favorites;
@@ -36,67 +61,18 @@ class Window implements ComponentListener, WindowListener {
     private final JRadioButtonMenuItem loadFirst;
     private final JRadioButtonMenuItem balanced;
     private final JRadioButtonMenuItem memSaver;
-
-    private JRadioButtonMenuItem lastSelected;
-
-    // all settings
-    private Map<String, String> settings;
-
     // the panel that displays the select files prompt/shows the images
     private final JPanel contentPanel;
-
     // the layout for the contentPanel
     private final CardLayout contentLayout;
-
+    private JLabel leftPic;
+    private JLabel rightPic;
+    private JRadioButtonMenuItem lastSelected;
+    // all settings
+    private Map<String, String> settings;
     private Bracket bracket;
-
     // the pair of images currently being displayed
     private ImageFile[] images; // [leftPic, rightPic]
-
-    // map keystrokes to actions
-    private static final String KEY_LEFT = "LEFT";
-    private static final String KEY_RIGHT = "RIGHT";
-    private static final String KEY_UP = "UP";
-    private static final String KEY_DOWN = "DOWN";
-
-    private static final String PLACEHOLDER = "Loading...";
-    private static final String IMG_CORRUPTED = "Unable to read %s - file may be corrupted or not" +
-            " a recognized image format";
-    private static final String IMG_NOT_FOUND = "An error occurred loading %s. Check the file " +
-            "exists";
-
-    private static final String ROUND_EMPTY = "There are no more images in this round";
-
-    // the names for each panel in contentLayout
-    private static final String PROMPT_PANEL = "prompt";
-    private static final String PIC_PANEL = "pics";
-    private static final String CONTINUE_PANEL = "continue";
-
-    // the name of the setting for the directory to open the file chooser at
-    private static final String PREFERENCE_DEFAULT_DIR = "default directory";
-    private static final String PREFERENCE_LOAD_TYPE = "load type";
-    private static final String LOAD_TYPE_FIRST = "first";
-    private static final String LOAD_TYPE_BALANCED = "balanced";
-    private static final String LOAD_TYPE_MEM_SAVER = "memory saver";
-
-    // the delay for highlighting the selected image(s) in milliseconds
-    private static final int ANIMATION_DELAY = 500;
-
-    // the padding around images
-    private static final int PAD = 5;
-
-    // the color to use when highlighting the selected image(s)
-    private static final Color SELECTED_COLOR = new Color(47, 191, 41);
-
-    // gets updates on the progress of loading images
-    interface LoadProgress {
-
-        void onImageLoaded();
-
-        void onImageLoadError(Exception e);
-
-        void onComplete();
-    }
 
     /**
      * Initialize and show a new GUI window
@@ -177,16 +153,13 @@ class Window implements ComponentListener, WindowListener {
                 if (e.getSource() == loadFirst) {
                     settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_FIRST);
                     loadImages();
-                }
-                else if (e.getSource() == balanced) {
+                } else if (e.getSource() == balanced) {
                     settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_BALANCED);
-                }
-                else if (e.getSource() == memSaver) {
+                } else if (e.getSource() == memSaver) {
                     settings.put(PREFERENCE_LOAD_TYPE, LOAD_TYPE_MEM_SAVER);
                     bracket.flushAll();
-                }
-                else Logger.getLogger(getClass().getName()).warning("Source " + e.getSource() +
-                            " did not match a menu item. Is there a bug?");
+                } else Logger.getLogger(getClass().getName()).warning("Source " + e.getSource() +
+                        " did not match a menu item. Is there a bug?");
             }
         };
 
@@ -287,7 +260,7 @@ class Window implements ComponentListener, WindowListener {
     /**
      * A helper method to calculate and update the image panels to the appropriate size
      *
-     * @return  - The size of the panels
+     * @return - The size of the panels
      */
     private Dimension setPicPanelSize() {
         Dimension panelSize = leftPic.getParent().getSize();
@@ -366,7 +339,7 @@ class Window implements ComponentListener, WindowListener {
      * Helper method that makes the panel to prompt the user to export their favorites or add
      * more photos
      *
-     * @return  - A panel that can be added to contentLayout
+     * @return - A panel that can be added to contentLayout
      */
     private JPanel makeContinuePanel() {
         JPanel next = new JPanel();
@@ -545,7 +518,7 @@ class Window implements ComponentListener, WindowListener {
     /**
      * Enables and disables user input for the frame
      *
-     * @param enabled   - Whether the frame should accept user input
+     * @param enabled - Whether the frame should accept user input
      */
     private void enableUI(boolean enabled) {
         for (JButton button : Arrays.asList(left, right, both, neither, dumpUnreadable)) {
@@ -734,8 +707,9 @@ class Window implements ComponentListener, WindowListener {
 
     /**
      * Helper method that shows an error dialog with a list of errors
-     * @param failed            - The list of errors
-     * @param messageBuilder    - The message to display with the errors
+     *
+     * @param failed         - The list of errors
+     * @param messageBuilder - The message to display with the errors
      */
     private void showExportError(List<String> failed, StringBuilder messageBuilder) {
         messageBuilder.append(failed.size());
@@ -922,6 +896,16 @@ class Window implements ComponentListener, WindowListener {
 
     }
 
+    // gets updates on the progress of loading images
+    interface LoadProgress {
+
+        void onImageLoaded();
+
+        void onImageLoadError(Exception e);
+
+        void onComplete();
+    }
+
     /**
      * Used for the file choosing - only allows image files to be selected
      */
@@ -974,6 +958,78 @@ class Window implements ComponentListener, WindowListener {
     }
 
     /**
+     * Loads a single image in its own thread
+     */
+    private static class SingleImageLoader extends SwingWorker<Pair<ImageIcon, String>, Void> {
+
+        private final Dimension maxSize;
+        private final ImageFile image;
+
+        /**
+         * Constructs the loader
+         *
+         * @param maxSize - The maximum size that an image should have
+         * @param image   - The image to load
+         */
+        public SingleImageLoader(Dimension maxSize, ImageFile image) {
+            this.maxSize = maxSize;
+            this.image = image;
+        }
+
+        /**
+         * This is executed in the background and should be run with SingleImageLoader.execute()
+         *
+         * @return - A pair with the ImageIcon as pair1 and an error message as pair2
+         */
+        @Override
+        protected Pair<ImageIcon, String> doInBackground() {
+            Pair<ImageIcon, String> response = new Pair<>();
+            try {
+                ImageIcon icon = image.getIcon(maxSize);
+                response.pair1 = icon;
+                if (icon == null)
+                    response.pair2 = String.format(IMG_CORRUPTED, image.getCanonicalPath());
+                else
+                    response.pair2 = null;
+            } catch (IOException e) {
+                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
+                        "occurred while loading left image: " + image.toString());
+                response.pair2 = String.format(IMG_NOT_FOUND, image.getAbsolutePath());
+            }
+            return response;
+        }
+    }
+
+    /**
+     * Class that allows two objects of different types to be passed around together
+     *
+     * @param <P1> The type of the first object
+     * @param <P2> The type of the second object
+     */
+    private static class Pair<P1, P2> {
+        P1 pair1;
+        P2 pair2;
+
+        /**
+         * Constructs a pair with the provided objects
+         *
+         * @param pair1 - The value for the first pair
+         * @param pair2 - The value for the second pair
+         */
+        public Pair(P1 pair1, P2 pair2) {
+            this.pair1 = pair1;
+            this.pair2 = pair2;
+        }
+
+        /**
+         * Constructs the pair with each object containing only null
+         */
+        public Pair() {
+            this(null, null);
+        }
+    }
+
+    /**
      * Loads all the images in the bracket in a separate thread while updating a progress monitor
      */
     private class ImageLoader extends SwingWorker<Void, Integer> {
@@ -983,7 +1039,7 @@ class Window implements ComponentListener, WindowListener {
         /**
          * Constructs an ImageLoader that will update the given monitor
          *
-         * @param monitor   - The monitor to update
+         * @param monitor - The monitor to update
          */
         public ImageLoader(ProgressMonitor monitor) {
             this.monitor = monitor;
@@ -992,7 +1048,7 @@ class Window implements ComponentListener, WindowListener {
         /**
          * This is executed in the background and should be run with SingleImageLoader.execute()
          *
-         * @return  - Nothing
+         * @return - Nothing
          */
         @Override
         protected Void doInBackground() {
@@ -1063,7 +1119,7 @@ class Window implements ComponentListener, WindowListener {
         /**
          * Constructs the loader
          *
-         * @param maxSize   - The maximum size that images should be
+         * @param maxSize - The maximum size that images should be
          */
         public ImagePairLoader(Dimension maxSize) {
             this.maxSize = maxSize;
@@ -1072,7 +1128,8 @@ class Window implements ComponentListener, WindowListener {
         /**
          * This is the background task. It should not be called directly. Use ImagePairLoader
          * .execute() instead
-         * @return  - Nothing
+         *
+         * @return - Nothing
          * @throws ExecutionException   - If something goes wrong
          * @throws InterruptedException - If the thread gets interrupted
          */
@@ -1096,78 +1153,6 @@ class Window implements ComponentListener, WindowListener {
 
             enableUI(true);
             return null;
-        }
-    }
-
-    /**
-     * Loads a single image in its own thread
-     */
-    private static class SingleImageLoader extends SwingWorker<Pair<ImageIcon, String>, Void> {
-
-        private final Dimension maxSize;
-        private final ImageFile image;
-
-        /**
-         * Constructs the loader
-         *
-         * @param maxSize   - The maximum size that an image should have
-         * @param image     - The image to load
-         */
-        public SingleImageLoader(Dimension maxSize, ImageFile image) {
-            this.maxSize = maxSize;
-            this.image = image;
-        }
-
-        /**
-         * This is executed in the background and should be run with SingleImageLoader.execute()
-         *
-         * @return  - A pair with the ImageIcon as pair1 and an error message as pair2
-         */
-        @Override
-        protected Pair<ImageIcon, String> doInBackground() {
-            Pair<ImageIcon, String> response = new Pair<>();
-            try {
-                ImageIcon icon = image.getIcon(maxSize);
-                response.pair1 = icon;
-                if (icon == null)
-                    response.pair2 = String.format(IMG_CORRUPTED, image.getCanonicalPath());
-                else
-                    response.pair2 = null;
-            } catch (IOException e) {
-                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
-                        "occurred while loading left image: " + image.toString());
-                response.pair2 = String.format(IMG_NOT_FOUND, image.getAbsolutePath());
-            }
-            return response;
-        }
-    }
-
-    /**
-     * Class that allows two objects of different types to be passed around together
-     *
-     * @param <P1> The type of the first object
-     * @param <P2> The type of the second object
-     */
-    private static class Pair<P1, P2> {
-        P1 pair1;
-        P2 pair2;
-
-        /**
-         * Constructs a pair with the provided objects
-         *
-         * @param pair1 - The value for the first pair
-         * @param pair2 - The value for the second pair
-         */
-        public Pair(P1 pair1, P2 pair2) {
-            this.pair1 = pair1;
-            this.pair2 = pair2;
-        }
-
-        /**
-         * Constructs the pair with each object containing only null
-         */
-        public Pair() {
-            this(null, null);
         }
     }
 }
