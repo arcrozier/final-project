@@ -351,7 +351,12 @@ class Window implements ComponentListener, WindowListener {
         JLabel text = new JLabel("Yay! You sorted all your photos! What do you want to do now?");
         text.setFont(new Font(null, Font.BOLD, 24));
 
-        next.add(text);
+        next.add(text, nextConstraints);
+
+        nextConstraints.gridy++;
+        next.add(Box.createVerticalStrut(15), nextConstraints);
+
+        nextConstraints.gridwidth = 1;
 
         JButton sortNew = new JButton("Sort new photos");
         JButton export = new JButton("Export my favorites");
@@ -359,14 +364,19 @@ class Window implements ComponentListener, WindowListener {
 
         sortNew.addActionListener(e -> chooseFiles(true));
         addPhotos.addActionListener(e -> {
+            bracket.ignoreDone();
             chooseFiles(false);
-            contentLayout.show(contentPanel, PIC_PANEL);
         });
         export.addActionListener(e -> exportFavorites());
 
-        nextConstraints.gridy = 1;
-        for (JButton button : Arrays.asList(export, sortNew, addPhotos)) {
-            next.add(button);
+        nextConstraints.gridy++;
+        nextConstraints.fill = GridBagConstraints.BOTH;
+
+        for (Component component : Arrays.asList(export, Box.createHorizontalStrut(10), sortNew,
+                Box.createHorizontalStrut(10), addPhotos)) {
+            component.setFont(new Font(null, Font.BOLD, 24));
+            component.setBackground(new Color(53, 62, 208));
+            next.add(component, nextConstraints);
             nextConstraints.gridx++;
         }
         return next;
@@ -714,14 +724,15 @@ class Window implements ComponentListener, WindowListener {
     private void showExportError(List<String> failed, StringBuilder messageBuilder) {
         messageBuilder.append(failed.size());
         messageBuilder.append("):");
+        StringBuilder failedBuilder = new StringBuilder();
         for (String file : failed) {
-            messageBuilder.append("\n");
-            messageBuilder.append(file);
+            failedBuilder.append(file);
+            failedBuilder.append("\n");
         }
         JPanel errorDialog = new JPanel();
         errorDialog.setLayout(new BoxLayout(errorDialog, BoxLayout.Y_AXIS));
-        errorDialog.add(new JLabel());
-        JTextArea messageArea = new JTextArea(messageBuilder.toString(), 10, 40);
+        errorDialog.add(new JLabel(messageBuilder.toString()));
+        JTextArea messageArea = new JTextArea(failedBuilder.toString(), 10, 40);
         messageArea.setLineWrap(true);
         messageArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(messageArea);
