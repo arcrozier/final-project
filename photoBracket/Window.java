@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.*;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Logger;
 
 /**
@@ -26,6 +27,7 @@ class Window implements ComponentListener, WindowListener {
     private final JLabel rounds;
     private final JLabel pics;
     private final JLabel total;
+    private final JLabel errors;
     private final JButton left;
     private final JButton right;
     private final JButton both;
@@ -63,9 +65,12 @@ class Window implements ComponentListener, WindowListener {
     private static final String IMG_NOT_FOUND = "An error occurred loading %s. Check the file " +
             "exists";
 
+    private static final String ROUND_EMPTY = "There are no more images in this round";
+
     // the names for each panel in contentLayout
     private static final String PROMPT_PANEL = "prompt";
     private static final String PIC_PANEL = "pics";
+    private static final String CONTINUE_PANEL = "continue";
 
     // the name of the setting for the directory to open the file chooser at
     private static final String PREFERENCE_DEFAULT_DIR = "default directory";
@@ -129,6 +134,7 @@ class Window implements ComponentListener, WindowListener {
         rounds = new JLabel();
         pics = new JLabel();
         total = new JLabel();
+        errors = new JLabel();
 
         frame = new JFrame("Photo Bracket");
         frame.setMinimumSize(new Dimension(600, 600));
@@ -237,6 +243,7 @@ class Window implements ComponentListener, WindowListener {
 
         contentPanel.add(makePromptPanel(), PROMPT_PANEL);
         contentPanel.add(makePicPanel(), PIC_PANEL);
+        contentPanel.add(makeContinuePanel(), CONTINUE_PANEL);
         if (bracket.isEmpty()) {
             contentLayout.show(contentPanel, PROMPT_PANEL);
         } else {
@@ -262,6 +269,10 @@ class Window implements ComponentListener, WindowListener {
 
     }
 
+    /**
+     * Begins the process of loading all images in the bracket (operation performed in another
+     * thread but blocks the UI until the operation is complete)
+     */
     private void loadImages() {
         enableUI(false);
         final ProgressMonitor monitor = new ProgressMonitor(frame, "Loading images", "0/" +
@@ -273,6 +284,11 @@ class Window implements ComponentListener, WindowListener {
         loader.execute();
     }
 
+    /**
+     * A helper method to calculate and update the image panels to the appropriate size
+     *
+     * @return  - The size of the panels
+     */
     private Dimension setPicPanelSize() {
         Dimension panelSize = leftPic.getParent().getSize();
         Dimension maxSize = new Dimension((int) (panelSize.width / 2 - PAD * 1.5),
@@ -344,6 +360,43 @@ class Window implements ComponentListener, WindowListener {
         SpringUtilities.makeGrid(pictures, 1, 2, PAD, PAD, PAD, PAD);
 
         return pictures;
+    }
+
+    /**
+     * Helper method that makes the panel to prompt the user to export their favorites or add
+     * more photos
+     *
+     * @return  - A panel that can be added to contentLayout
+     */
+    private JPanel makeContinuePanel() {
+        JPanel next = new JPanel();
+        next.setLayout(new GridBagLayout());
+        GridBagConstraints nextConstraints = new GridBagConstraints();
+        nextConstraints.gridy = 0;
+        nextConstraints.gridx = 0;
+        nextConstraints.gridwidth = GridBagConstraints.REMAINDER;
+        JLabel text = new JLabel("Yay! You sorted all your photos! What do you want to do now?");
+        text.setFont(new Font(null, Font.BOLD, 24));
+
+        next.add(text);
+
+        JButton sortNew = new JButton("Sort new photos");
+        JButton export = new JButton("Export my favorites");
+        JButton addPhotos = new JButton("Add photos");
+
+        sortNew.addActionListener(e -> chooseFiles(true));
+        addPhotos.addActionListener(e -> {
+            chooseFiles(false);
+            contentLayout.show(contentPanel, PIC_PANEL);
+        });
+        export.addActionListener(e -> exportFavorites());
+
+        nextConstraints.gridy = 1;
+        for (JButton button : Arrays.asList(export, sortNew, addPhotos)) {
+            next.add(button);
+            nextConstraints.gridx++;
+        }
+        return next;
     }
 
     /**
@@ -437,7 +490,11 @@ class Window implements ComponentListener, WindowListener {
         right.addActionListener(e -> animateRight());
         both.addActionListener(e -> animateBoth());
         neither.addActionListener(e -> newPics());
-        // todo dumpUnreadable
+        dumpUnreadable.addActionListener(e -> {
+            if (unreadable(images[0]) && !unreadable(images[1])) animateLeft();
+            else if (unreadable(images[1]) && !unreadable(images[0])) animateRight();
+            else if (unreadable(images[0]) && unreadable(images[1])) updatePanel();
+        });
 
         dumpUnreadable.setVisible(false);
 
@@ -471,7 +528,7 @@ class Window implements ComponentListener, WindowListener {
         JLabel totalLabel = new JLabel("Total pictures in bracket: ");
 
         for (Component component : Arrays.asList(dumpUnreadable, left, both, neither, right,
-                roundsLabel, rounds, picsLabel, pics, totalLabel, total)) {
+                roundsLabel, rounds, picsLabel, pics, totalLabel, total, errors)) {
             buttons.add(component, buttonConstraints);
             buttonConstraints.gridx += 1;
         }
@@ -481,13 +538,17 @@ class Window implements ComponentListener, WindowListener {
         return buttons;
     }
 
+    private boolean unreadable(ImageFile file) {
+        return file != null && file.isUnreadable();
+    }
+
     /**
      * Enables and disables user input for the frame
      *
      * @param enabled   - Whether the frame should accept user input
      */
     private void enableUI(boolean enabled) {
-        for (JButton button : Arrays.asList(left, right, both, neither)) {
+        for (JButton button : Arrays.asList(left, right, both, neither, dumpUnreadable)) {
             button.setEnabled(enabled);
         }
     }
@@ -537,6 +598,7 @@ class Window implements ComponentListener, WindowListener {
      * Helper method that executes when the user chooses the left picture
      */
     private void leftChosen() {
+        errors.setText(null);
         bracket.selected(images[0]);
         updatePanel();
     }
@@ -545,6 +607,7 @@ class Window implements ComponentListener, WindowListener {
      * Helper method that executes when the user chooses the right picture
      */
     private void rightChosen() {
+        errors.setText(null);
         bracket.selected(images[1]);
         updatePanel();
     }
@@ -553,6 +616,7 @@ class Window implements ComponentListener, WindowListener {
      * Helper method that executes when the user wants to choose both pictures
      */
     private void bothChosen() {
+        errors.setText(null);
         bracket.selected(images);
         updatePanel();
     }
@@ -561,14 +625,19 @@ class Window implements ComponentListener, WindowListener {
      * Helper method to retrieve new pictures from the bracket
      */
     private void newPics() {
-        bracket.getNewFiles(images);
-        updatePanel();
+        if (bracket.getRoundSize() == 0) {
+            errors.setText(ROUND_EMPTY);
+        } else {
+            bracket.getNewFiles(images);
+            updatePanel();
+        }
     }
 
     /**
      * Helper method that updates the panel based on the button selected
      */
     private void updatePanel() {
+        dumpUnreadable.setVisible(false);
         images = bracket.getNextPair();
         refreshPics();
         if (images[0] != null && images[1] != null) {
@@ -733,6 +802,8 @@ class Window implements ComponentListener, WindowListener {
                         JOptionPane.ERROR_MESSAGE
                 );
                 done();
+            } else {
+                contentLayout.show(contentPanel, CONTINUE_PANEL);
             }
         } else { // continues sorting
             bracket.ignoreDone();
@@ -902,14 +973,27 @@ class Window implements ComponentListener, WindowListener {
         }
     }
 
+    /**
+     * Loads all the images in the bracket in a separate thread while updating a progress monitor
+     */
     private class ImageLoader extends SwingWorker<Void, Integer> {
 
         private final ProgressMonitor monitor;
 
+        /**
+         * Constructs an ImageLoader that will update the given monitor
+         *
+         * @param monitor   - The monitor to update
+         */
         public ImageLoader(ProgressMonitor monitor) {
             this.monitor = monitor;
         }
 
+        /**
+         * This is executed in the background and should be run with SingleImageLoader.execute()
+         *
+         * @return  - Nothing
+         */
         @Override
         protected Void doInBackground() {
             LoadProgress callback = new LoadProgress() {
@@ -944,6 +1028,12 @@ class Window implements ComponentListener, WindowListener {
             return null;
         }
 
+        /**
+         * Updates the progress of the monitor (also should not be called directly - this is
+         * automatically handled by Swing)
+         *
+         * @param completes - All of the intermediate progress updates
+         */
         @Override
         protected void process(List<Integer> completes) {
             int complete = completes.get(completes.size() - 1);
@@ -951,6 +1041,9 @@ class Window implements ComponentListener, WindowListener {
             monitor.setNote(complete + "/" + monitor.getMaximum());
         }
 
+        /**
+         * Called when the loader is done
+         */
         @Override
         protected void done() {
             if (!monitor.isCanceled()) monitor.close();
@@ -960,42 +1053,121 @@ class Window implements ComponentListener, WindowListener {
         }
     }
 
+    /**
+     * Loads a pair of images and puts them into the JLabels in its own thread
+     */
     private class ImagePairLoader extends SwingWorker<Void, Void> {
 
         private final Dimension maxSize;
 
+        /**
+         * Constructs the loader
+         *
+         * @param maxSize   - The maximum size that images should be
+         */
         public ImagePairLoader(Dimension maxSize) {
             this.maxSize = maxSize;
         }
 
+        /**
+         * This is the background task. It should not be called directly. Use ImagePairLoader
+         * .execute() instead
+         * @return  - Nothing
+         * @throws ExecutionException   - If something goes wrong
+         * @throws InterruptedException - If the thread gets interrupted
+         */
         @Override
-        protected Void doInBackground() {
-            ImageIcon icon;
-            try {
-                icon = images[0].getIcon(maxSize); // todo load in own thread
-                leftPic.setIcon(icon);
-                if (icon == null)
-                    leftPic.setText(String.format(IMG_CORRUPTED, images[0].getCanonicalPath()));
-                else
-                    leftPic.setText(null);
-            } catch (IOException e) {
-                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
-                        "occurred while loading left image: " + images[0].toString());
-                leftPic.setText(String.format(IMG_NOT_FOUND, images[0].getAbsolutePath()));
-            }
-            try {
-                icon = images[1].getIcon(maxSize); // todo load in own thread
-                rightPic.setIcon(icon);
-                if (icon == null)
-                    rightPic.setText(String.format(IMG_CORRUPTED, images[0].getCanonicalPath()));
-                else rightPic.setText(null);
-            } catch (IOException e) {
-                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
-                        "occurred while loading right image: " + images[1].toString());
-                rightPic.setText(String.format(IMG_NOT_FOUND, images[0].getAbsolutePath()));
-            }
+        protected Void doInBackground() throws ExecutionException, InterruptedException {
+            SingleImageLoader leftLoader = new SingleImageLoader(maxSize, images[0]);
+            leftLoader.execute();
+            SingleImageLoader rightLoader = new SingleImageLoader(maxSize, images[1]);
+            rightLoader.execute();
+
+            Pair<ImageIcon, String> left = leftLoader.get();
+            Pair<ImageIcon, String> right = rightLoader.get();
+
+            if (left.pair1 == null || right.pair1 == null) dumpUnreadable.setVisible(true);
+
+            leftPic.setIcon(left.pair1);
+            leftPic.setText(left.pair2);
+
+            rightPic.setIcon(right.pair1);
+            rightPic.setText(right.pair2);
+
             enableUI(true);
             return null;
+        }
+    }
+
+    /**
+     * Loads a single image in its own thread
+     */
+    private static class SingleImageLoader extends SwingWorker<Pair<ImageIcon, String>, Void> {
+
+        private final Dimension maxSize;
+        private final ImageFile image;
+
+        /**
+         * Constructs the loader
+         *
+         * @param maxSize   - The maximum size that an image should have
+         * @param image     - The image to load
+         */
+        public SingleImageLoader(Dimension maxSize, ImageFile image) {
+            this.maxSize = maxSize;
+            this.image = image;
+        }
+
+        /**
+         * This is executed in the background and should be run with SingleImageLoader.execute()
+         *
+         * @return  - A pair with the ImageIcon as pair1 and an error message as pair2
+         */
+        @Override
+        protected Pair<ImageIcon, String> doInBackground() {
+            Pair<ImageIcon, String> response = new Pair<>();
+            try {
+                ImageIcon icon = image.getIcon(maxSize);
+                response.pair1 = icon;
+                if (icon == null)
+                    response.pair2 = String.format(IMG_CORRUPTED, image.getCanonicalPath());
+                else
+                    response.pair2 = null;
+            } catch (IOException e) {
+                Logger.getLogger(getClass().getName()).warning(e.getClass().getName() + " " +
+                        "occurred while loading left image: " + image.toString());
+                response.pair2 = String.format(IMG_NOT_FOUND, image.getAbsolutePath());
+            }
+            return response;
+        }
+    }
+
+    /**
+     * Class that allows two objects of different types to be passed around together
+     *
+     * @param <P1> The type of the first object
+     * @param <P2> The type of the second object
+     */
+    private static class Pair<P1, P2> {
+        P1 pair1;
+        P2 pair2;
+
+        /**
+         * Constructs a pair with the provided objects
+         *
+         * @param pair1 - The value for the first pair
+         * @param pair2 - The value for the second pair
+         */
+        public Pair(P1 pair1, P2 pair2) {
+            this.pair1 = pair1;
+            this.pair2 = pair2;
+        }
+
+        /**
+         * Constructs the pair with each object containing only null
+         */
+        public Pair() {
+            this(null, null);
         }
     }
 }
